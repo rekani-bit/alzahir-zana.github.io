@@ -5,136 +5,674 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Alzahir Zana | Portfolio</title>
   <style>
-    /* ---------- GLOBAL STYLES ---------- */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
     body {
-      font-family: "Segoe UI", Arial, sans-serif;
-      background-color: #f5f7fa;
-      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       color: #333;
-      line-height: 1.6;
+      overflow-x: hidden;
     }
-    header {
-      background: #0055aa;
-      color: white;
-      padding: 20px 0;
+
+    /* Animated Background Particles */
+    .bg-animation {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      overflow: hidden;
+    }
+
+    .particle {
+      position: absolute;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+      animation: float 20s infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0) translateX(0); opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { transform: translateY(-100vh) translateX(50px); opacity: 0; }
+    }
+
+    /* Navigation */
+    nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 15px 0;
+      z-index: 1000;
+      box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+    }
+
+    nav.scrolled {
+      padding: 10px 0;
+      box-shadow: 0 2px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    nav ul {
+      display: flex;
+      justify-content: center;
+      list-style: none;
+      gap: 40px;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: #667eea;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      position: relative;
+      padding: 5px 0;
+    }
+
+    nav a::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: linear-gradient(90deg, #667eea, #764ba2);
+      transition: width 0.3s ease;
+    }
+
+    nav a:hover::after {
+      width: 100%;
+    }
+
+    /* Hero Section */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       text-align: center;
+      color: white;
+      padding: 100px 20px 50px;
     }
-    header h1 {
-      margin: 0;
-      font-size: 2rem;
+
+    .hero-content {
+      animation: fadeInUp 1s ease;
     }
-    header p {
-      font-size: 1rem;
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .hero h1 {
+      font-size: 4rem;
+      margin-bottom: 10px;
+      background: linear-gradient(to right, #fff, #f0f0f0);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero .subtitle {
+      font-size: 1.5rem;
       opacity: 0.9;
-    }
-
-    /* ---------- CONTAINER ---------- */
-    .container {
-      width: 90%;
-      max-width: 900px;
-      margin: 40px auto;
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      padding: 30px;
-    }
-
-    h2 {
-      color: #0055aa;
-      border-bottom: 2px solid #0055aa;
-      padding-bottom: 5px;
-    }
-
-    /* ---------- SECTIONS ---------- */
-    .about, .skills, .projects, .contact {
       margin-bottom: 30px;
     }
 
-    .skills ul, .projects ul {
-      list-style-type: none;
-      padding: 0;
+    .hero .cta-buttons {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      margin-top: 30px;
     }
 
-    .skills li, .projects li {
-      background: #eef4ff;
-      padding: 10px;
-      border-radius: 6px;
-      margin: 6px 0;
-    }
-
-    /* ---------- CONTACT ---------- */
-    .contact p {
-      margin: 8px 0;
-    }
-    a {
-      color: #0055aa;
+    .btn {
+      padding: 12px 30px;
+      border-radius: 30px;
       text-decoration: none;
-    }
-    a:hover {
-      text-decoration: underline;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      display: inline-block;
     }
 
-    /* ---------- FOOTER ---------- */
-    footer {
-      text-align: center;
-      padding: 20px;
-      background: #0055aa;
+    .btn-primary {
+      background: white;
+      color: #667eea;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 25px rgba(0, 0, 0, 0.3);
+    }
+
+    .btn-secondary {
+      border: 2px solid white;
       color: white;
-      margin-top: 40px;
-      border-top-left-radius: 10px;
-      border-top-right-radius: 10px;
+    }
+
+    .btn-secondary:hover {
+      background: white;
+      color: #667eea;
+      transform: translateY(-3px);
+    }
+
+    /* Section Styles */
+    section {
+      padding: 80px 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .section-white {
+      background: white;
+      margin: 50px auto;
+      border-radius: 20px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    }
+
+    .section-title {
+      font-size: 2.5rem;
+      text-align: center;
+      margin-bottom: 50px;
+      color: #667eea;
+      position: relative;
+      display: inline-block;
+      width: 100%;
+    }
+
+    .section-title::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100px;
+      height: 4px;
+      background: linear-gradient(90deg, #667eea, #764ba2);
+      border-radius: 2px;
+    }
+
+    /* About Section */
+    .about-content {
+      display: flex;
+      gap: 50px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .about-text {
+      flex: 1;
+      min-width: 300px;
+    }
+
+    .about-text p {
+      font-size: 1.1rem;
+      line-height: 1.8;
+      color: #555;
+      margin-bottom: 20px;
+    }
+
+    .profile-image {
+      flex: 0 0 300px;
+      text-align: center;
+    }
+
+    .profile-image .placeholder {
+      width: 250px;
+      height: 250px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 4rem;
+      font-weight: bold;
+      margin: 0 auto;
+      box-shadow: 0 10px 40px rgba(102, 126, 234, 0.4);
+      transition: transform 0.3s ease;
+    }
+
+    .profile-image .placeholder:hover {
+      transform: scale(1.05);
+    }
+
+    /* Skills Section */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 30px;
+    }
+
+    .skill-card {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      padding: 30px;
+      border-radius: 15px;
+      color: white;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+    }
+
+    .skill-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
+    }
+
+    .skill-card h3 {
+      font-size: 1.3rem;
+      margin-bottom: 15px;
+    }
+
+    .skill-card ul {
+      list-style: none;
+    }
+
+    .skill-card li {
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .skill-card li:last-child {
+      border-bottom: none;
+    }
+
+    /* Projects Section */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+    }
+
+    .project-card {
+      background: white;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+    }
+
+    .project-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+    }
+
+    .project-image {
+      height: 200px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 3rem;
+    }
+
+    .project-content {
+      padding: 25px;
+    }
+
+    .project-content h3 {
+      color: #667eea;
+      margin-bottom: 10px;
+    }
+
+    .project-content p {
+      color: #666;
+      line-height: 1.6;
+    }
+
+    .project-tags {
+      margin-top: 15px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .tag {
+      background: #f0f0f0;
+      padding: 5px 15px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      color: #667eea;
+    }
+
+    /* Contact Section */
+    .contact-content {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 30px;
+      text-align: center;
+    }
+
+    .contact-item {
+      padding: 30px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 15px;
+      color: white;
+      transition: transform 0.3s ease;
+    }
+
+    .contact-item:hover {
+      transform: translateY(-5px);
+    }
+
+    .contact-item .icon {
+      font-size: 2.5rem;
+      margin-bottom: 15px;
+    }
+
+    .contact-item a {
+      color: white;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    /* Footer */
+    footer {
+      background: rgba(0, 0, 0, 0.8);
+      color: white;
+      text-align: center;
+      padding: 30px 20px;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .hero h1 {
+        font-size: 2.5rem;
+      }
+
+      .hero .subtitle {
+        font-size: 1.2rem;
+      }
+
+      nav ul {
+        gap: 20px;
+        flex-wrap: wrap;
+      }
+
+      .about-content {
+        flex-direction: column;
+      }
+
+      .cta-buttons {
+        flex-direction: column;
+      }
     }
   </style>
 </head>
 <body>
-  <header>
-    <h1>Alzahir Zana</h1>
-    <p>Computer Science Student | Web Developer | Learner</p>
-  </header>
+  <!-- Background Animation -->
+  <div class="bg-animation" id="bgAnimation"></div>
 
-  <div class="container">
-    <!-- ABOUT -->
-    <section class="about">
-      <h2>About Me</h2>
-      <p>
-        Hi! I'm <strong>Alzahir Zana</strong>, a Computer Science student passionate about
-        technology, software development, and building creative web projects.
-        I love learning new programming languages and exploring AI and cloud computing.
+  <!-- Navigation -->
+  <nav id="navbar">
+    <ul>
+      <li><a href="#home">Home</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- Hero Section -->
+  <section id="home" class="hero">
+    <div class="hero-content">
+      <h1>Alzahir Zana</h1>
+      <p class="subtitle">Computer Science Student | Web Developer | AI Enthusiast</p>
+      <p style="max-width: 600px; margin: 0 auto; opacity: 0.9;">
+        Transforming ideas into elegant digital solutions
       </p>
-    </section>
+      <div class="cta-buttons">
+        <a href="#projects" class="btn btn-primary">View My Work</a>
+        <a href="#contact" class="btn btn-secondary">Get In Touch</a>
+      </div>
+    </div>
+  </section>
 
-    <!-- SKILLS -->
-    <section class="skills">
-      <h2>Skills</h2>
-      <ul>
-        <li>HTML, CSS, JavaScript</li>
-        <li>Python (Flask, Pandas, NumPy)</li>
-        <li>Java / C++</li>
-        <li>Git & GitHub</li>
-        <li>Database: MySQL, SQLite</li>
-      </ul>
-    </section>
+  <!-- About Section -->
+  <section id="about" class="section-white">
+    <h2 class="section-title">About Me</h2>
+    <div class="about-content">
+      <div class="about-text">
+        <p>
+          Hi! I'm <strong>Alzahir Zana</strong>, a passionate Computer Science student 
+          with a deep love for technology and innovation. I specialize in creating 
+          modern, responsive web applications and exploring the fascinating world of 
+          artificial intelligence.
+        </p>
+        <p>
+          My journey in tech is driven by curiosity and the desire to build solutions 
+          that make a difference. From crafting elegant user interfaces to developing 
+          intelligent systems, I'm always eager to learn and grow.
+        </p>
+        <p>
+          When I'm not coding, you'll find me exploring new technologies, contributing 
+          to open-source projects, or learning about cloud computing and machine learning.
+        </p>
+      </div>
+      <div class="profile-image">
+        <div class="placeholder">AZ</div>
+      </div>
+    </div>
+  </section>
 
-    <!-- PROJECTS -->
-    <section class="projects">
-      <h2>Projects</h2>
-      <ul>
-        
-        <li><strong>AI Chatbot:</strong> A simple chatbot built using Python and NLP libraries.</li>
-        <li><strong>Student Management System:</strong> CRUD app built with HTML, CSS, and JavaScript.</li>
-      </ul>
-    </section>
+  <!-- Skills Section -->
+  <section id="skills" class="section-white">
+    <h2 class="section-title">Skills & Technologies</h2>
+    <div class="skills-grid">
+      <div class="skill-card">
+        <h3>🎨 Frontend Development</h3>
+        <ul>
+          <li>HTML5 & CSS3</li>
+          <li>JavaScript (ES6+)</li>
+          <li>Responsive Design</li>
+          <li>UI/UX Principles</li>
+        </ul>
+      </div>
+      <div class="skill-card">
+        <h3>⚙️ Backend Development</h3>
+        <ul>
+          <li>Python (Flask)</li>
+          <li>RESTful APIs</li>
+          <li>Database Design</li>
+          <li>Server Management</li>
+        </ul>
+      </div>
+      <div class="skill-card">
+        <h3>💻 Programming Languages</h3>
+        <ul>
+          <li>Python</li>
+          <li>Java</li>
+          <li>C++</li>
+          <li>JavaScript</li>
+        </ul>
+      </div>
+      <div class="skill-card">
+        <h3>🛠️ Tools & Technologies</h3>
+        <ul>
+          <li>Git & GitHub</li>
+          <li>MySQL & SQLite</li>
+          <li>Pandas & NumPy</li>
+          <li>VS Code</li>
+        </ul>
+      </div>
+    </div>
+  </section>
 
-    <!-- CONTACT -->
-    <section class="contact">
-      <h2>Contact</h2>
-      <p>📧 Email: <a href="mailto:alzahir@example.com">zana.rekani11@gmail.com</a></p>
-      <p>🌐 Website: <a href="https://alzahir-zana.github.io" target="_blank">alzahir-zana.github.io</a></p>
-    </section>
-  </div>
+  <!-- Projects Section -->
+  <section id="projects" class="section-white">
+    <h2 class="section-title">Featured Projects</h2>
+    <div class="projects-grid">
+      <div class="project-card">
+        <div class="project-image">🤖</div>
+        <div class="project-content">
+          <h3>AI Chatbot</h3>
+          <p>
+            An intelligent conversational chatbot built with Python and Natural 
+            Language Processing libraries. Features sentiment analysis and contextual responses.
+          </p>
+          <div class="project-tags">
+            <span class="tag">Python</span>
+            <span class="tag">NLP</span>
+            <span class="tag">AI</span>
+          </div>
+        </div>
+      </div>
+      <div class="project-card">
+        <div class="project-image">📚</div>
+        <div class="project-content">
+          <h3>Student Management System</h3>
+          <p>
+            A full-featured CRUD application for managing student records with a modern 
+            interface. Built with vanilla JavaScript and local storage.
+          </p>
+          <div class="project-tags">
+            <span class="tag">JavaScript</span>
+            <span class="tag">HTML/CSS</span>
+            <span class="tag">CRUD</span>
+          </div>
+        </div>
+      </div>
+      <div class="project-card">
+        <div class="project-image">🌐</div>
+        <div class="project-content">
+          <h3>Portfolio Website</h3>
+          <p>
+            A modern, responsive portfolio website showcasing projects and skills. 
+            Features smooth animations and an elegant design.
+          </p>
+          <div class="project-tags">
+            <span class="tag">HTML</span>
+            <span class="tag">CSS</span>
+            <span class="tag">JavaScript</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
+  <!-- Contact Section -->
+  <section id="contact" class="section-white">
+    <h2 class="section-title">Get In Touch</h2>
+    <div class="contact-content">
+      <div class="contact-item">
+        <div class="icon">📧</div>
+        <h3>Email</h3>
+        <a href="mailto:zana.rekani11@gmail.com">zana.rekani11@gmail.com</a>
+      </div>
+      <div class="contact-item">
+        <div class="icon">🌐</div>
+        <h3>Website</h3>
+        <a href="https://alzahir-zana.github.io" target="_blank">alzahir-zana.github.io</a>
+      </div>
+      <div class="contact-item">
+        <div class="icon">💼</div>
+        <h3>GitHub</h3>
+        <a href="https://github.com/alzahir-zana" target="_blank">github.com/alzahir-zana</a>
+      </div>
+      <div class="contact-item">
+        <div class="icon">📸</div>
+        <h3>Instagram</h3>
+        <a href="https://instagram.com/zana.zahiir" target="_blank">@zana.zahiir</a>
+      </div>
+      <div class="contact-item">
+        <div class="icon">🎵</div>
+        <h3>TikTok</h3>
+        <a href="https://tiktok.com/@zaanaa_hassan" target="_blank">@zaanaa_hassan</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
   <footer>
-    <p> Alzahir Zana. All rights reserved.</p>
+    <p>&copy; 2025 Alzahir Zana. Crafted with passion and code.</p>
   </footer>
+
+  <script>
+    // Background Animation
+    function createParticles() {
+      const bg = document.getElementById('bgAnimation');
+      for (let i = 0; i < 30; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.style.width = Math.random() * 100 + 50 + 'px';
+        particle.style.height = particle.style.width;
+        particle.style.left = Math.random() * 100 + '%';
+        particle.style.animationDelay = Math.random() * 20 + 's';
+        particle.style.animationDuration = (Math.random() * 10 + 15) + 's';
+        bg.appendChild(particle);
+      }
+    }
+
+    // Smooth Scrolling
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      });
+    });
+
+    // Navbar Scroll Effect
+    let lastScroll = 0;
+    window.addEventListener('scroll', () => {
+      const navbar = document.getElementById('navbar');
+      const currentScroll = window.pageYOffset;
+      
+      if (currentScroll > 100) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+      
+      lastScroll = currentScroll;
+    });
+
+    // Intersection Observer for Animations
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, observerOptions);
+
+    document.querySelectorAll('.skill-card, .project-card, .contact-item').forEach(el => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(20px)';
+      el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+      observer.observe(el);
+    });
+
+    // Initialize
+    createParticles();
+  </script>
 </body>
 </html>
