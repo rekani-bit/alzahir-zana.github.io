@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zagros POS — Point of Sale for Multi-Branch Retail</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,560;9..144,680&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#EDE8DC; --paper-alt:#E3DCC9; --ink:#1F2A24; --ink-soft:#55625A;
+  --brass:#A9781E; --brass-bright:#C99A34; --teal:#2B5D63; --green:#3F7D5C; --red:#A23E2E;
+  --line:rgba(31,42,36,0.15); --card:#F7F4EB; --sidebar:#1F2A24; --sidebar-ink:#D8D2C2; --sidebar-line:rgba(255,255,255,0.08);
+  --display:'Fraunces',serif; --body:'IBM Plex Sans','IBM Plex Sans Arabic',sans-serif; --mono:'IBM Plex Mono',monospace;
+}
+html[data-theme="dark"]{
+  --paper:#141814; --paper-alt:#1B211C; --ink:#EAE6D9; --ink-soft:#A6AFA3;
+  --brass:#D8A94A; --brass-bright:#EFC167; --teal:#7FC0C6; --green:#74C297; --red:#E2896F;
+  --line:rgba(234,230,217,0.13); --card:#1A1F1A; --sidebar:#0F1310; --sidebar-ink:#B9C2B4; --sidebar-line:rgba(255,255,255,0.06);
+}
+html[dir="rtl"] body{ font-family:'IBM Plex Sans Arabic', var(--body); }
+*{ box-sizing:border-box; }
+html{ scroll-behavior:smooth; }
+body{ margin:0; background:var(--paper); color:var(--ink); font-family:var(--body); line-height:1.5; transition:background .3s,color .3s; -webkit-font-smoothing:antialiased; }
+img,svg{ display:block; }
+.wrap{ max-width:1220px; margin:0 auto; padding:0 28px; }
+@media (max-width:640px){ .wrap{ padding:0 18px; } }
+h1,h2,h3{ font-family:var(--display); font-weight:560; margin:0; letter-spacing:-0.01em; }
+.eyebrow{ font-family:var(--mono); font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--brass); display:flex; align-items:center; gap:10px; margin-bottom:14px; }
+.eyebrow::before{ content:""; width:18px; height:1px; background:var(--brass); }
+html[dir="rtl"] .eyebrow::before{ display:none; }
+html[dir="rtl"] .eyebrow::after{ content:""; width:18px; height:1px; background:var(--brass); }
+
+/* Site nav */
+.sitenav{ position:sticky; top:0; z-index:50; background:color-mix(in srgb, var(--paper) 90%, transparent); backdrop-filter:blur(10px); border-bottom:1px solid var(--line); }
+.nav-inner{ display:flex; align-items:center; justify-content:space-between; padding:16px 0; }
+.brand{ display:flex; align-items:center; gap:10px; }
+.brand svg{ width:28px; height:28px; }
+.brand-text b{ font-family:var(--display); font-size:17px; font-weight:680; display:block; }
+.brand-text span{ font-family:var(--mono); font-size:10px; color:var(--ink-soft); letter-spacing:.08em; text-transform:uppercase; }
+.nav-links{ display:flex; gap:26px; font-size:13.5px; }
+.nav-links a{ color:var(--ink-soft); text-decoration:none; }
+.nav-links a:hover{ color:var(--ink); }
+@media (max-width:760px){ .nav-links{ display:none; } }
+.cta-btn{ font-family:var(--mono); font-size:12px; letter-spacing:.03em; background:var(--ink); color:var(--paper); border:none; padding:10px 16px; border-radius:8px; cursor:pointer; }
+html[data-theme="dark"] .cta-btn{ background:var(--brass); color:#141814; }
+
+/* Hero */
+.hero{ padding:64px 0 20px; text-align:center; }
+.hero h1{ font-size:clamp(30px,4.4vw,46px); line-height:1.08; max-width:20ch; margin:0 auto; }
+.hero p.sub{ margin:18px auto 0; font-size:16.5px; color:var(--ink-soft); max-width:52ch; }
+.steps{ display:flex; justify-content:center; gap:0; margin:40px auto 0; max-width:920px; border:1px solid var(--line); border-radius:12px; overflow:hidden; }
+.step{ flex:1; padding:20px 20px; border-inline-start:1px solid var(--line); background:var(--card); text-align:start; }
+.step:first-child{ border-inline-start:none; }
+.step .snum{ font-family:var(--mono); font-size:11px; color:var(--brass); letter-spacing:.08em; }
+.step p{ margin:8px 0 0; font-size:13.5px; color:var(--ink-soft); }
+.step b{ font-family:var(--body); font-size:14.5px; font-weight:600; display:block; margin-top:2px; }
+@media (max-width:760px){ .steps{ flex-direction:column; } .step{ border-inline-start:none; border-top:1px solid var(--line); } .step:first-child{ border-top:none; } }
+
+/* App window mockup */
+.appwrap{ padding:44px 0 80px; }
+.win{ max-width:1120px; margin:0 auto; border:1px solid var(--line); border-radius:14px; overflow:hidden; box-shadow:0 30px 70px -40px rgba(0,0,0,0.35); background:var(--card); }
+.win-chrome{ display:flex; align-items:center; gap:10px; padding:12px 16px; border-bottom:1px solid var(--line); background:var(--paper-alt); }
+.dots{ display:flex; gap:6px; }
+.dots span{ width:9px; height:9px; border-radius:50%; background:var(--line); }
+.win-url{ flex:1; text-align:center; font-family:var(--mono); font-size:11.5px; color:var(--ink-soft); }
+.win-body{ display:flex; min-height:560px; }
+@media (max-width:820px){ .win-body{ flex-direction:column; } }
+
+.sidebar{ width:210px; flex:none; background:var(--sidebar); color:var(--sidebar-ink); padding:18px 12px; }
+@media (max-width:820px){ .sidebar{ width:100%; display:flex; overflow-x:auto; padding:10px; gap:4px; } }
+.sb-brand{ display:flex; align-items:center; gap:8px; padding:6px 10px 18px; }
+@media (max-width:820px){ .sb-brand{ display:none; } }
+.sb-brand span{ font-family:var(--display); font-size:14.5px; color:#fff; }
+.sb-item{ display:flex; align-items:center; gap:10px; padding:9px 10px; border-radius:8px; font-size:13px; cursor:pointer; color:var(--sidebar-ink); white-space:nowrap; border-inline-start:2px solid transparent; }
+.sb-item svg{ width:15px; height:15px; flex:none; }
+.sb-item:hover{ background:rgba(255,255,255,0.05); }
+.sb-item.active{ background:rgba(255,255,255,0.08); color:#fff; border-inline-start:2px solid var(--brass-bright); }
+.sb-item.disabled{ opacity:.45; cursor:default; }
+.sb-item.disabled:hover{ background:transparent; }
+.sb-div{ height:1px; background:var(--sidebar-line); margin:10px 6px; }
+@media (max-width:820px){ .sb-div{ display:none; } }
+
+.main{ flex:1; display:flex; flex-direction:column; min-width:0; }
+.topbar{ display:flex; align-items:center; justify-content:space-between; gap:12px; padding:14px 20px; border-bottom:1px solid var(--line); flex-wrap:wrap; }
+.branch-pick{ display:flex; align-items:center; gap:8px; font-size:13px; border:1px solid var(--line); padding:7px 12px; border-radius:8px; color:var(--ink-soft); }
+.branch-pick svg{ width:13px; height:13px; }
+.top-controls{ display:flex; align-items:center; gap:8px; }
+.seg{ display:flex; border:1px solid var(--line); border-radius:8px; overflow:hidden; }
+.seg button{ font-family:var(--mono); font-size:11.5px; padding:6px 10px; background:transparent; border:none; color:var(--ink-soft); cursor:pointer; border-inline-start:1px solid var(--line); }
+.seg button:first-child{ border-inline-start:none; }
+.seg button.active{ background:var(--ink); color:var(--paper); }
+.icon-btn{ width:32px; height:32px; border-radius:8px; border:1px solid var(--line); background:transparent; color:var(--ink); display:flex; align-items:center; justify-content:center; cursor:pointer; }
+.icon-btn svg{ width:15px; height:15px; }
+.avatar{ width:30px; height:30px; border-radius:50%; background:var(--brass); color:#fff; display:flex; align-items:center; justify-content:center; font-family:var(--mono); font-size:11px; }
+
+.screen{ padding:22px 24px 28px; display:none; }
+.screen.active{ display:block; }
+.screen-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; flex-wrap:wrap; gap:10px; }
+.screen-head h2{ font-size:19px; }
+.screen-head p{ margin:4px 0 0; font-size:12.5px; color:var(--ink-soft); }
+
+/* Dashboard screen */
+.stat-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--line); border:1px solid var(--line); border-radius:10px; overflow:hidden; margin-bottom:20px; }
+@media (max-width:640px){ .stat-grid{ grid-template-columns:repeat(2,1fr); } }
+.stat{ background:var(--card); padding:16px; }
+.stat .slabel{ font-family:var(--mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.07em; color:var(--ink-soft); }
+.stat .sval{ font-family:var(--display); font-size:21px; margin-top:6px; }
+.stat.warn .sval{ color:var(--red); } .stat.good .sval{ color:var(--green); }
+
+.dash-grid{ display:grid; grid-template-columns:1.1fr 1fr; gap:16px; }
+@media (max-width:820px){ .dash-grid{ grid-template-columns:1fr; } }
+.card{ border:1px solid var(--line); border-radius:10px; padding:16px 18px; background:var(--card); }
+.card b.ct{ font-family:var(--display); font-size:14.5px; }
+.bars{ display:flex; align-items:flex-end; gap:10px; height:120px; margin-top:14px; }
+.bar-col{ flex:1; display:flex; flex-direction:column; align-items:center; gap:6px; height:100%; justify-content:flex-end; }
+.bar{ width:100%; max-width:26px; background:var(--brass); border-radius:3px 3px 1px 1px; height:0; transition:height 1s cubic-bezier(.2,.8,.2,1); }
+.bar-col span{ font-family:var(--mono); font-size:9.5px; color:var(--ink-soft); }
+.bar-col.peak .bar{ background:var(--teal); }
+
+table{ width:100%; border-collapse:collapse; font-size:12.5px; }
+thead th{ text-align:start; font-family:var(--mono); font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--ink-soft); padding:0 8px 8px; border-bottom:1px solid var(--line); font-weight:500; }
+tbody td{ padding:9px 8px; border-bottom:1px solid var(--line); }
+tbody tr:last-child td{ border-bottom:none; }
+tbody tr:hover{ background:var(--paper-alt); }
+.mono{ font-family:var(--mono); }
+.badge{ font-family:var(--mono); font-size:10px; padding:3px 8px; border-radius:20px; display:inline-block; letter-spacing:.02em; }
+.badge.ok{ background:color-mix(in srgb, var(--green) 16%, transparent); color:var(--green); }
+.badge.low{ background:color-mix(in srgb, var(--brass) 18%, transparent); color:var(--brass); }
+.badge.out{ background:color-mix(in srgb, var(--red) 16%, transparent); color:var(--red); }
+
+/* POS screen */
+.pos-layout{ display:grid; grid-template-columns:1.3fr 1fr; gap:18px; }
+@media (max-width:820px){ .pos-layout{ grid-template-columns:1fr; } }
+.grid-products{ display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
+@media (max-width:560px){ .grid-products{ grid-template-columns:repeat(2,1fr); } }
+.pill{ text-align:start; padding:11px; border:1px solid var(--line); border-radius:9px; background:var(--paper); cursor:pointer; transition:transform .15s,border-color .15s; }
+.pill:hover{ border-color:var(--brass); transform:translateY(-2px); }
+.pill .pname{ font-size:12.5px; font-weight:500; display:block; margin-bottom:3px; }
+.pill .pprice{ font-family:var(--mono); font-size:11px; color:var(--brass); }
+.receipt-col{ background:var(--paper-alt); border:1px solid var(--line); border-radius:10px; display:flex; flex-direction:column; }
+.receipt-head{ padding:14px 16px 8px; border-bottom:1px dashed var(--line); }
+.receipt-head .rlabel{ font-family:var(--mono); font-size:10px; letter-spacing:.1em; text-transform:uppercase; color:var(--teal); }
+.receipt-head .rmeta{ font-family:var(--mono); font-size:10px; color:var(--ink-soft); margin-top:5px; display:flex; justify-content:space-between; }
+.receipt-body{ flex:1; padding:10px 16px; min-height:150px; }
+.rline{ display:flex; justify-content:space-between; gap:10px; font-family:var(--mono); font-size:12px; padding:6px 0; border-bottom:1px dotted var(--line); animation:feed .25s ease; }
+@keyframes feed{ from{ opacity:0; transform:translateY(-6px); } to{ opacity:1; transform:translateY(0); } }
+.rempty{ font-family:var(--mono); font-size:11.5px; color:var(--ink-soft); padding-top:6px; }
+.receipt-foot{ border-top:1px dashed var(--line); padding:12px 16px 16px; }
+.rtotal{ display:flex; justify-content:space-between; align-items:baseline; }
+.rtotal .tl{ font-family:var(--mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.1em; color:var(--ink-soft); }
+.rtotal .tv{ font-family:var(--mono); font-size:19px; font-weight:500; transition:color .2s; }
+.tv.flash{ color:var(--brass); }
+.rbtn{ margin-top:10px; width:100%; padding:9px; border-radius:8px; border:1px solid var(--line); background:transparent; color:var(--ink-soft); font-family:var(--mono); font-size:11px; cursor:pointer; }
+.rbtn:hover{ border-color:var(--red); color:var(--red); }
+
+/* Reports screen */
+.report-row{ display:flex; align-items:center; justify-content:space-between; padding:13px 4px; border-bottom:1px solid var(--line); gap:14px; flex-wrap:wrap; }
+.report-row:last-child{ border-bottom:none; }
+.report-name{ font-size:13.5px; font-weight:500; }
+.report-meta{ font-family:var(--mono); font-size:10.5px; color:var(--ink-soft); margin-top:2px; }
+.export-group{ display:flex; gap:6px; }
+.exp-btn{ font-family:var(--mono); font-size:10.5px; padding:6px 10px; border:1px solid var(--line); border-radius:6px; background:transparent; color:var(--ink-soft); cursor:pointer; }
+.exp-btn:hover{ border-color:var(--brass); color:var(--brass); }
+
+/* Feature strip below window */
+section.features{ padding:70px 0 20px; }
+.section-head{ max-width:600px; margin:0 auto 40px; text-align:center; }
+.section-head h2{ font-size:clamp(24px,3vw,32px); }
+.section-head p{ margin-top:10px; color:var(--ink-soft); font-size:14.5px; }
+.section-head .eyebrow{ justify-content:center; }
+.feat-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--line); border:1px solid var(--line); border-radius:12px; overflow:hidden; }
+@media (max-width:820px){ .feat-grid{ grid-template-columns:repeat(2,1fr); } }
+@media (max-width:560px){ .feat-grid{ grid-template-columns:1fr; } }
+.feat{ background:var(--paper); padding:24px 20px; opacity:0; transform:translateY(12px); transition:opacity .5s,transform .5s; }
+.feat.in{ opacity:1; transform:translateY(0); }
+.feat svg{ width:20px; height:20px; color:var(--brass); margin-bottom:14px; }
+.feat h3{ font-size:15.5px; font-weight:600; font-family:var(--body); }
+.feat p{ margin:7px 0 0; font-size:13px; color:var(--ink-soft); }
+
+.stack{ padding:40px 0 70px; text-align:center; }
+.stack-label{ font-family:var(--mono); font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-soft); margin-bottom:16px; }
+.stack-badges{ display:flex; justify-content:center; gap:10px; flex-wrap:wrap; }
+.stack-badges span{ font-family:var(--mono); font-size:12px; border:1px solid var(--line); padding:8px 14px; border-radius:20px; color:var(--ink-soft); }
+
+footer{ border-top:1px solid var(--line); padding:30px 0 40px; }
+.foot-row{ display:flex; justify-content:space-between; align-items:center; gap:20px; flex-wrap:wrap; }
+.foot-row p{ font-size:13px; color:var(--ink-soft); margin:0; max-width:46ch; }
+.foot-mark{ font-family:var(--mono); font-size:11px; color:var(--ink-soft); }
+
+@media (prefers-reduced-motion:reduce){ *{ animation-duration:.001ms !important; transition-duration:.001ms !important; } }
+</style>
+</head>
+<body>
+
+<nav class="sitenav">
+  <div class="wrap nav-inner">
+    <div class="brand">
+      <svg viewBox="0 0 32 32" fill="none"><path d="M4 26L16 4L28 26H4Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M11 26L16 16L21 26" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+      <div class="brand-text"><b>Zagros POS</b><span>Multi-branch retail system</span></div>
+    </div>
+    <div class="nav-links">
+      <a href="#preview" data-i18n="nl_preview">Product preview</a>
+      <a href="#features" data-i18n="nl_features">Modules</a>
+      <a href="#stack" data-i18n="nl_stack">Technology</a>
+    </div>
+    <button class="cta-btn" onclick="document.getElementById('preview').scrollIntoView({behavior:'smooth'})" data-i18n="nl_cta">See it in action</button>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow" style="justify-content:center;" data-i18n="hero_eyebrow">Product Preview</div>
+    <h1 data-i18n="hero_title">The point-of-sale system built for how Kurdistan retailers actually work</h1>
+    <p class="sub" data-i18n="hero_sub">One system for the till, the stockroom, and the back office — across every branch, in Arabic, Kurdish, or English.</p>
+
+    <div class="steps">
+      <div class="step"><div class="snum">01</div><b data-i18n="s1_t">Ring up a sale</b><p data-i18n="s1_d">The cashier taps products, the ticket prints, and stock drops instantly.</p></div>
+      <div class="step"><div class="snum">02</div><b data-i18n="s2_t">Stock updates everywhere</b><p data-i18n="s2_d">Every branch sees real numbers in real time — no phone calls, no guessing.</p></div>
+      <div class="step"><div class="snum">03</div><b data-i18n="s3_t">The owner checks reports</b><p data-i18n="s3_d">Sales, profit, and cash closings — reviewed or exported in a click.</p></div>
+    </div>
+  </div>
+</header>
+
+<section class="appwrap" id="preview">
+  <div class="wrap">
+    <div class="win">
+      <div class="win-chrome">
+        <div class="dots"><span></span><span></span><span></span></div>
+        <div class="win-url">app.zagrospos.com</div>
+      </div>
+      <div class="win-body">
+        <aside class="sidebar">
+          <div class="sb-brand">
+            <svg width="16" height="16" viewBox="0 0 32 32" fill="none"><path d="M4 26L16 4L28 26H4Z" stroke="#EFC167" stroke-width="2" stroke-linejoin="round"/></svg>
+            <span>Zagros POS</span>
+          </div>
+          <div class="sb-item active" data-screen="dashboard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="5" rx="1.5"/><rect x="13" y="10" width="8" height="11" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/></svg><span data-i18n="sb_dashboard">Dashboard</span></div>
+          <div class="sb-item" data-screen="pos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="6" width="18" height="13" rx="1.6"/><path d="M3 10h18M8 14h2"/></svg><span data-i18n="sb_pos">Point of Sale</span></div>
+          <div class="sb-item disabled" title="Included in the full build"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 7l9-4 9 4-9 4-9-4Z"/><path d="M3 7v10l9 4 9-4V7"/></svg><span data-i18n="sb_products">Products</span></div>
+          <div class="sb-item" data-screen="inventory"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 21V8l8-5 8 5v13"/><path d="M9 21v-7h6v7"/></svg><span data-i18n="sb_inventory">Inventory</span></div>
+          <div class="sb-item disabled" title="Included in the full build"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 16V6h10v10"/><path d="M13 10h4l4 4v2h-8"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/></svg><span data-i18n="sb_purchases">Purchases</span></div>
+          <div class="sb-item disabled" title="Included in the full build"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="3.4"/><path d="M4 20c1.4-4 4.6-6 8-6s6.6 2 8 6"/></svg><span data-i18n="sb_customers">Customers</span></div>
+          <div class="sb-item" data-screen="reports"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M14 3v5h5"/><path d="M6 3h8l5 5v13H6z"/><path d="M9 17l2-4 2 2 3-5"/></svg><span data-i18n="sb_reports">Reports</span></div>
+          <div class="sb-div"></div>
+          <div class="sb-item disabled" title="Included in the full build"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.6V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.6-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H9a1.7 1.7 0 0 0 1-1.6V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.6 1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.9V9a1.7 1.7 0 0 0 1.6 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.6 1Z"/></svg><span data-i18n="sb_settings">Settings</span></div>
+        </aside>
+
+        <div class="main">
+          <div class="topbar">
+            <div class="branch-pick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 21V10l8-6 8 6v11"/><path d="M9 21v-6h6v6"/></svg><span id="branchLabel">Duhok — Branch 01</span></div>
+            <div class="top-controls">
+              <div class="seg" id="langSeg">
+                <button data-lang="en" class="active">EN</button>
+                <button data-lang="ar">AR</button>
+                <button data-lang="ku">KU</button>
+              </div>
+              <button class="icon-btn" id="themeBtn" aria-label="Toggle dark mode">
+                <svg id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5Z"/></svg>
+              </button>
+              <div class="avatar">RS</div>
+            </div>
+          </div>
+
+          <!-- Dashboard -->
+          <div class="screen active" id="screen-dashboard">
+            <div class="screen-head"><div><h2 data-i18n="dash_title">Today, at a glance</h2><p data-i18n="dash_sub">Every branch, one screen.</p></div></div>
+            <div class="stat-grid">
+              <div class="stat"><div class="slabel" data-i18n="stat_sales">Sales Today</div><div class="sval">1,284,500 IQD</div></div>
+              <div class="stat warn"><div class="slabel" data-i18n="stat_lowstock">Low Stock</div><div class="sval">6 items</div></div>
+              <div class="stat"><div class="slabel" data-i18n="stat_branches">Active Branches</div><div class="sval">3</div></div>
+              <div class="stat good"><div class="slabel" data-i18n="stat_profit">Net Profit</div><div class="sval">312,900 IQD</div></div>
+            </div>
+            <div class="dash-grid">
+              <div class="card">
+                <b class="ct" data-i18n="chart_title">Weekly sales</b>
+                <div class="bars" id="barChart">
+                  <div class="bar-col" data-h="52"><div class="bar"></div><span>Sat</span></div>
+                  <div class="bar-col" data-h="68"><div class="bar"></div><span>Sun</span></div>
+                  <div class="bar-col" data-h="61"><div class="bar"></div><span>Mon</span></div>
+                  <div class="bar-col" data-h="74"><div class="bar"></div><span>Tue</span></div>
+                  <div class="bar-col" data-h="58"><div class="bar"></div><span>Wed</span></div>
+                  <div class="bar-col peak" data-h="100"><div class="bar"></div><span>Thu</span></div>
+                  <div class="bar-col" data-h="30"><div class="bar"></div><span>Fri</span></div>
+                </div>
+              </div>
+              <div class="card">
+                <b class="ct" data-i18n="recent_title">Recent sales</b>
+                <table style="margin-top:12px;">
+                  <thead><tr><th data-i18n="th_ticket">Ticket</th><th data-i18n="th_branch">Branch</th><th data-i18n="th_total">Total</th></tr></thead>
+                  <tbody>
+                    <tr><td class="mono">#DH-000481</td><td>Duhok-01</td><td class="mono">47,500 IQD</td></tr>
+                    <tr><td class="mono">#EB-000212</td><td>Erbil-02</td><td class="mono">68,000 IQD</td></tr>
+                    <tr><td class="mono">#ZK-000098</td><td>Zakho-03</td><td class="mono">112,300 IQD</td></tr>
+                    <tr><td class="mono">#DH-000480</td><td>Duhok-01</td><td class="mono">8,000 IQD</td></tr>
+                    <tr><td class="mono">#EB-000211</td><td>Erbil-02</td><td class="mono">34,500 IQD</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- POS -->
+          <div class="screen" id="screen-pos">
+            <div class="screen-head"><div><h2 data-i18n="pos_title">Checkout</h2><p data-i18n="pos_sub">Tap a product to add it to the ticket.</p></div></div>
+            <div class="pos-layout">
+              <div class="grid-products" id="productGrid"></div>
+              <div class="receipt-col">
+                <div class="receipt-head">
+                  <div class="rlabel" data-i18n="receipt_label">Live Receipt</div>
+                  <div class="rmeta"><span id="ticketNo">#DH-000482</span><span id="ticketTime"></span></div>
+                </div>
+                <div class="receipt-body" id="receiptBody"><p class="rempty" data-i18n="hero_cta_hint">Tap a product to add it</p></div>
+                <div class="receipt-foot">
+                  <div class="rtotal"><span class="tl" data-i18n="total_label">Total</span><span class="tv" id="totalVal">0 IQD</span></div>
+                  <button class="rbtn" id="newSaleBtn" data-i18n="new_sale">New sale</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Inventory -->
+          <div class="screen" id="screen-inventory">
+            <div class="screen-head"><div><h2 data-i18n="inv_title">Stock across branches</h2><p data-i18n="inv_sub">Every product, every location, updated live.</p></div></div>
+            <div class="card" style="padding:0; overflow-x:auto;">
+              <table style="min-width:600px;">
+                <thead><tr>
+                  <th data-i18n="th_sku">SKU</th><th data-i18n="th_product">Product</th><th data-i18n="th_branch2">Branch</th>
+                  <th data-i18n="th_stock">Stock</th><th data-i18n="th_status">Status</th>
+                </tr></thead>
+                <tbody>
+                  <tr><td class="mono">AC-1001</td><td>Arabic Coffee 250g</td><td>Duhok-01</td><td class="mono">128</td><td><span class="badge ok" data-i18n="b_ok">In stock</span></td></tr>
+                  <tr><td class="mono">NB-2003</td><td>Notebook A5</td><td>Duhok-01</td><td class="mono">12</td><td><span class="badge low" data-i18n="b_low">Low stock</span></td></tr>
+                  <tr><td class="mono">MS-3010</td><td>Wireless Mouse</td><td>Erbil-02</td><td class="mono">54</td><td><span class="badge ok" data-i18n="b_ok">In stock</span></td></tr>
+                  <tr><td class="mono">LP-3021</td><td>LED Desk Lamp</td><td>Duhok-01</td><td class="mono">0</td><td><span class="badge out" data-i18n="b_out">Out of stock</span></td></tr>
+                  <tr><td class="mono">WB-1042</td><td>Water Bottle 1L</td><td>Zakho-03</td><td class="mono">210</td><td><span class="badge ok" data-i18n="b_ok">In stock</span></td></tr>
+                  <tr><td class="mono">HP-3055</td><td>Bluetooth Headphones</td><td>Erbil-02</td><td class="mono">8</td><td><span class="badge low" data-i18n="b_low">Low stock</span></td></tr>
+                  <tr><td class="mono">BP-4090</td><td>Backpack</td><td>Zakho-03</td><td class="mono">3</td><td><span class="badge low" data-i18n="b_low">Low stock</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Reports -->
+          <div class="screen" id="screen-reports">
+            <div class="screen-head"><div><h2 data-i18n="rep_title">Reports &amp; exports</h2><p data-i18n="rep_sub">Generate and export in PDF, Excel, or CSV.</p></div></div>
+            <div class="card">
+              <div class="report-row">
+                <div><div class="report-name" data-i18n="r1_n">Sales Summary</div><div class="report-meta" data-i18n="r1_m">Last generated: today, 09:14</div></div>
+                <div class="export-group"><button class="exp-btn">PDF</button><button class="exp-btn">XLSX</button><button class="exp-btn">CSV</button></div>
+              </div>
+              <div class="report-row">
+                <div><div class="report-name" data-i18n="r2_n">Inventory Valuation</div><div class="report-meta" data-i18n="r2_m">Last generated: yesterday, 18:40</div></div>
+                <div class="export-group"><button class="exp-btn">PDF</button><button class="exp-btn">XLSX</button><button class="exp-btn">CSV</button></div>
+              </div>
+              <div class="report-row">
+                <div><div class="report-name" data-i18n="r3_n">Profit &amp; Loss</div><div class="report-meta" data-i18n="r3_m">Last generated: 3 days ago</div></div>
+                <div class="export-group"><button class="exp-btn">PDF</button><button class="exp-btn">XLSX</button><button class="exp-btn">CSV</button></div>
+              </div>
+              <div class="report-row">
+                <div><div class="report-name" data-i18n="r4_n">Cash Closing Log</div><div class="report-meta" data-i18n="r4_m">Last generated: today, 07:02</div></div>
+                <div class="export-group"><button class="exp-btn">PDF</button><button class="exp-btn">XLSX</button><button class="exp-btn">CSV</button></div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="features" id="features">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow" data-i18n="feat_eyebrow">Also included</div>
+      <h2 data-i18n="feat_title">The modules behind the screens</h2>
+      <p data-i18n="feat_sub">Everything a growing multi-branch retailer needs, in one system.</p>
+    </div>
+    <div class="feat-grid" id="featGrid">
+      <div class="feat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 16V6h10v10"/><path d="M13 10h4l4 4v2h-8"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/></svg><h3 data-i18n="f2_t">Purchases &amp; Transfers</h3><p data-i18n="f2_d">Order from suppliers and move stock between branches — no spreadsheets.</p></div>
+      <div class="feat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="5" y="3" width="14" height="18" rx="1.5"/><path d="M8 7h8M8 11h2m3 0h3M8 15h2m3 0h3"/></svg><h3 data-i18n="f3_t">Accounting &amp; Cash Closing</h3><p data-i18n="f3_d">Every shift reconciles itself. Every dinar is accounted for.</p></div>
+      <div class="feat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 21V10l8-6 8 6v11"/><path d="M9 21v-6h6v6"/></svg><h3 data-i18n="f4_t">Multi-Branch, One Login</h3><p data-i18n="f4_d">Switch branches without switching apps or accounts.</p></div>
+      <div class="feat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 8a6 6 0 0 1 12 0c0 5 2 6 2 6H4s2-1 2-6Z"/><path d="M10 19a2 2 0 0 0 4 0"/></svg><h3 data-i18n="f6_t">Notifications</h3><p data-i18n="f6_d">Low stock, big sales, closed shifts — know the moment it happens.</p></div>
+      <div class="feat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.5 3.8 5.7 3.8 9s-1.3 6.5-3.8 9c-2.5-2.5-3.8-5.7-3.8-9S9.5 5.5 12 3Z"/></svg><h3 data-i18n="f7_t">Arabic, Kurdish, English</h3><p data-i18n="f7_d">Full right-to-left support — not a translation layer bolted on after.</p></div>
+      <div class="feat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg><h3 data-i18n="f9_t">Roles &amp; Permissions</h3><p data-i18n="f9_d">Cashiers, managers, and owners each see exactly what they need.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="stack" id="stack">
+  <div class="wrap">
+    <div class="stack-label" data-i18n="stack_label">Built on</div>
+    <div class="stack-badges">
+      <span>Laravel 12</span><span>React</span><span>MySQL</span><span>Tailwind CSS</span><span>REST API</span>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot-row">
+    <p data-i18n="footer_tagline">Designed for markets that speak Arabic, Kurdish, and English — right out of the box.</p>
+    <span class="foot-mark">Zagros POS — Product Preview · Static demo, no backend connected</span>
+  </div>
+</footer>
+
+<script>
+const dict = {
+  en:{ nl_preview:"Product preview", nl_features:"Modules", nl_stack:"Technology", nl_cta:"See it in action",
+    hero_eyebrow:"Product Preview", hero_title:"The point-of-sale system built for how Kurdistan retailers actually work",
+    hero_sub:"One system for the till, the stockroom, and the back office — across every branch, in Arabic, Kurdish, or English.",
+    s1_t:"Ring up a sale", s1_d:"The cashier taps products, the ticket prints, and stock drops instantly.",
+    s2_t:"Stock updates everywhere", s2_d:"Every branch sees real numbers in real time — no phone calls, no guessing.",
+    s3_t:"The owner checks reports", s3_d:"Sales, profit, and cash closings — reviewed or exported in a click.",
+    sb_dashboard:"Dashboard", sb_pos:"Point of Sale", sb_products:"Products", sb_inventory:"Inventory",
+    sb_purchases:"Purchases", sb_customers:"Customers", sb_reports:"Reports", sb_settings:"Settings",
+    dash_title:"Today, at a glance", dash_sub:"Every branch, one screen.",
+    stat_sales:"Sales Today", stat_lowstock:"Low Stock", stat_branches:"Active Branches", stat_profit:"Net Profit",
+    chart_title:"Weekly sales", recent_title:"Recent sales", th_ticket:"Ticket", th_branch:"Branch", th_total:"Total",
+    pos_title:"Checkout", pos_sub:"Tap a product to add it to the ticket.", receipt_label:"Live Receipt",
+    hero_cta_hint:"Tap a product to add it", total_label:"Total", new_sale:"New sale",
+    inv_title:"Stock across branches", inv_sub:"Every product, every location, updated live.",
+    th_sku:"SKU", th_product:"Product", th_branch2:"Branch", th_stock:"Stock", th_status:"Status",
+    b_ok:"In stock", b_low:"Low stock", b_out:"Out of stock",
+    rep_title:"Reports &amp; exports", rep_sub:"Generate and export in PDF, Excel, or CSV.",
+    r1_n:"Sales Summary", r1_m:"Last generated: today, 09:14",
+    r2_n:"Inventory Valuation", r2_m:"Last generated: yesterday, 18:40",
+    r3_n:"Profit &amp; Loss", r3_m:"Last generated: 3 days ago",
+    r4_n:"Cash Closing Log", r4_m:"Last generated: today, 07:02",
+    feat_eyebrow:"Also included", feat_title:"The modules behind the screens",
+    feat_sub:"Everything a growing multi-branch retailer needs, in one system.",
+    f2_t:"Purchases &amp; Transfers", f2_d:"Order from suppliers and move stock between branches — no spreadsheets.",
+    f3_t:"Accounting &amp; Cash Closing", f3_d:"Every shift reconciles itself. Every dinar is accounted for.",
+    f4_t:"Multi-Branch, One Login", f4_d:"Switch branches without switching apps or accounts.",
+    f6_t:"Notifications", f6_d:"Low stock, big sales, closed shifts — know the moment it happens.",
+    f7_t:"Arabic, Kurdish, English", f7_d:"Full right-to-left support — not a translation layer bolted on after.",
+    f9_t:"Roles &amp; Permissions", f9_d:"Cashiers, managers, and owners each see exactly what they need.",
+    stack_label:"Built on",
+    footer_tagline:"Designed for markets that speak Arabic, Kurdish, and English — right out of the box."
+  },
+  ar:{ nl_preview:"معاينة المنتج", nl_features:"الوحدات", nl_stack:"التقنية", nl_cta:"شاهده عمليًا",
+    hero_eyebrow:"معاينة المنتج", hero_title:"نظام نقاط بيع مصمم لطريقة عمل تجار التجزئة في كردستان",
+    hero_sub:"نظام واحد للصندوق والمخزن والمكتب الخلفي — عبر كل الفروع، بالعربية أو الكردية أو الإنجليزية.",
+    s1_t:"إتمام عملية بيع", s1_d:"يختار الكاشير المنتجات، تُطبع الفاتورة، وينقص المخزون فورًا.",
+    s2_t:"يتحدّث المخزون في كل مكان", s2_d:"كل فرع يرى الأرقام الحقيقية لحظيًا — بلا اتصالات هاتفية ولا تخمين.",
+    s3_t:"المالك يراجع التقارير", s3_d:"المبيعات والأرباح وإغلاق الصندوق — تُراجَع أو تُصدَّر بضغطة واحدة.",
+    sb_dashboard:"لوحة التحكم", sb_pos:"نقطة البيع", sb_products:"المنتجات", sb_inventory:"المخزون",
+    sb_purchases:"المشتريات", sb_customers:"العملاء", sb_reports:"التقارير", sb_settings:"الإعدادات",
+    dash_title:"اليوم، بنظرة واحدة", dash_sub:"كل فرع، شاشة واحدة.",
+    stat_sales:"مبيعات اليوم", stat_lowstock:"مخزون منخفض", stat_branches:"الفروع النشطة", stat_profit:"صافي الربح",
+    chart_title:"مبيعات الأسبوع", recent_title:"آخر المبيعات", th_ticket:"الفاتورة", th_branch:"الفرع", th_total:"الإجمالي",
+    pos_title:"الدفع", pos_sub:"اضغط على منتج لإضافته إلى الفاتورة.", receipt_label:"فاتورة مباشرة",
+    hero_cta_hint:"اضغط على منتج لإضافته", total_label:"الإجمالي", new_sale:"عملية بيع جديدة",
+    inv_title:"المخزون عبر الفروع", inv_sub:"كل منتج، كل موقع، محدث لحظيًا.",
+    th_sku:"الرمز", th_product:"المنتج", th_branch2:"الفرع", th_stock:"الكمية", th_status:"الحالة",
+    b_ok:"متوفر", b_low:"مخزون منخفض", b_out:"غير متوفر",
+    rep_title:"التقارير والتصدير", rep_sub:"أنشئ التقارير وصدّرها بصيغة PDF أو Excel أو CSV.",
+    r1_n:"ملخص المبيعات", r1_m:"آخر إنشاء: اليوم، 09:14",
+    r2_n:"تقييم المخزون", r2_m:"آخر إنشاء: أمس، 18:40",
+    r3_n:"الأرباح والخسائر", r3_m:"آخر إنشاء: قبل 3 أيام",
+    r4_n:"سجل إغلاق الصندوق", r4_m:"آخر إنشاء: اليوم، 07:02",
+    feat_eyebrow:"يشمل أيضًا", feat_title:"الوحدات خلف الشاشات",
+    feat_sub:"كل ما يحتاجه تاجر تجزئة متعدد الفروع، في نظام واحد.",
+    f2_t:"المشتريات والتحويلات", f2_d:"اطلب من الموردين وانقل البضائع بين الفروع — بلا جداول بيانات.",
+    f3_t:"المحاسبة وإغلاق الصندوق", f3_d:"كل وردية تُسوّى تلقائيًا. كل دينار محسوب.",
+    f4_t:"متعدد الفروع، دخول واحد", f4_d:"بدّل الفرع دون تبديل التطبيق أو الحساب.",
+    f6_t:"الإشعارات", f6_d:"مخزون منخفض، مبيعات كبيرة، إغلاق وردية — اعرف فور حدوثه.",
+    f7_t:"عربي، كردي، إنجليزي", f7_d:"دعم كامل للكتابة من اليمين لليسار، وليس طبقة ترجمة إضافية.",
+    f9_t:"الأدوار والصلاحيات", f9_d:"الكاشير والمدير والمالك، كل منهم يرى ما يحتاجه فقط.",
+    stack_label:"مبني على",
+    footer_tagline:"مصمم للأسواق التي تتحدث العربية والكردية والإنجليزية — من الصندوق مباشرة."
+  },
+  ku:{ nl_preview:"پێشبینینی بەرهەم", nl_features:"بەشەکان", nl_stack:"تەکنەلۆژیا", nl_cta:"بیبینە بە کارکردن",
+    hero_eyebrow:"پێشبینینی بەرهەم", hero_title:"سیستەمی فرۆشتن بۆ ئەو شێوازەی بازرگانانی کوردستان کار دەکەن",
+    hero_sub:"یەک سیستەم بۆ سندوق و کۆگا و ئۆفیسی پشتەوە — لە هەموو لقەکان، بە عەرەبی، کوردی، یان ئینگلیزی.",
+    s1_t:"فرۆشتنێک تەواو بکە", s1_d:"کاشیر کاڵا هەڵدەبژێرێت، پسوولە چاپ دەبێت، کۆگا دەستبەجێ کەم دەبێت.",
+    s2_t:"کۆگا لە هەموو شوێنێک نوێ دەبێت", s2_d:"هەموو لقێک ژمارە ڕاستەقینەکان دەبینێت — بەبێ پەیوەندی تەلەفۆنی.",
+    s3_t:"خاوەنکار ڕاپۆرتەکان دەبینێت", s3_d:"فرۆشتن، قازانج، و داخستنی سندوق — بە یەک کرتە دەردەچن.",
+    sb_dashboard:"داشبۆرد", sb_pos:"خاڵی فرۆشتن", sb_products:"کاڵاکان", sb_inventory:"کۆگا",
+    sb_purchases:"کڕین", sb_customers:"کڕیارەکان", sb_reports:"ڕاپۆرتەکان", sb_settings:"ڕێکخستنەکان",
+    dash_title:"ئەمڕۆ، بە یەک بینین", dash_sub:"هەموو لقێک، یەک شاشە.",
+    stat_sales:"فرۆشتنی ئەمڕۆ", stat_lowstock:"کۆگای کەم", stat_branches:"لقە چالاکەکان", stat_profit:"قازانجی ڕەها",
+    chart_title:"فرۆشتنی هەفتانە", recent_title:"دوایین فرۆشتنەکان", th_ticket:"پسوولە", th_branch:"لق", th_total:"کۆی گشتی",
+    pos_title:"لێدانی نرخ", pos_sub:"کاڵایەک دابگرە بۆ زیادکردنی بۆ پسوولە.", receipt_label:"پسوولەی ڕاستەوخۆ",
+    hero_cta_hint:"کاڵایەک دابگرە بۆ زیادکردنی", total_label:"کۆی گشتی", new_sale:"فرۆشتنی نوێ",
+    inv_title:"کۆگا لە هەموو لقەکان", inv_sub:"هەر کاڵایەک، هەر شوێنێک، نوێکراوەتەوە.",
+    th_sku:"کۆد", th_product:"کاڵا", th_branch2:"لق", th_stock:"کۆگا", th_status:"دۆخ",
+    b_ok:"بەردەستە", b_low:"کۆگای کەم", b_out:"نەماوە",
+    rep_title:"ڕاپۆرت و دەرهێنان", rep_sub:"ڕاپۆرت دروست بکە و بە PDF یان Excel یان CSV دەریبهێنە.",
+    r1_n:"کورتەی فرۆشتن", r1_m:"دوایین دروستکردن: ئەمڕۆ، 09:14",
+    r2_n:"نرخاندنی کۆگا", r2_m:"دوایین دروستکردن: دوێنێ، 18:40",
+    r3_n:"قازانج و زیان", r3_m:"دوایین دروستکردن: ٣ ڕۆژ لەمەوبەر",
+    r4_n:"تۆماری داخستنی سندوق", r4_m:"دوایین دروستکردن: ئەمڕۆ، 07:02",
+    feat_eyebrow:"هەروەها", feat_title:"بەشەکانی پشت شاشەکان",
+    feat_sub:"هەموو ئەوەی بازرگانێکی فرەلق پێویستی پێیەتی، لە یەک سیستەمدا.",
+    f2_t:"کڕین و گواستنەوە", f2_d:"لە دابینکەران داوا بکە و کاڵا لەنێوان لقەکان بگوازەوە — بەبێ خشتەی ئێکسڵ.",
+    f3_t:"ژمێریاری و داخستنی سندوق", f3_d:"هەر ۆردەیەک خۆی ڕێک دەخات. هەر دیناری تۆمار دەکرێت.",
+    f4_t:"فرەلق، یەک چوونەژوورەوە", f4_d:"لق بگۆڕە بەبێ گۆڕینی ئەپ یان هەژمار.",
+    f6_t:"ئاگادارکردنەوە", f6_d:"کۆگای کەم، فرۆشتنی گەورە، داخستنی ۆردە — دەستبەجێ بزانە.",
+    f7_t:"عەرەبی، کوردی، ئینگلیزی", f7_d:"پشتگیری تەواو بۆ نووسینی ڕاست بۆ چەپ، نەک تەنها وەرگێڕان.",
+    f9_t:"ڕۆڵ و دەسەڵات", f9_d:"کاشیر، بەڕێوەبەر، و خاوەنکار هەریەکە تەنها ئەوە دەبینن کە پێویستیانە.",
+    stack_label:"دروستکراوە لەسەر",
+    footer_tagline:"بۆ بازاڕگەکانی کە بە عەرەبی و کوردی و ئینگلیزی دەدوێن — بەبێ هیچ ئامادەکارییەکی زیادە."
+  }
+};
+
+function applyLang(lang){
+  document.documentElement.lang = lang;
+  document.documentElement.dir = (lang === 'en') ? 'ltr' : 'rtl';
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const key = el.getAttribute('data-i18n');
+    if(dict[lang][key] !== undefined){ el.innerHTML = dict[lang][key]; }
+  });
+  document.querySelectorAll('#langSeg button').forEach(b=> b.classList.toggle('active', b.dataset.lang === lang));
+  document.querySelectorAll('.pname').forEach(el=>{ const p = products[el.dataset.p]; el.textContent = p[lang]; });
+}
+document.getElementById('langSeg').addEventListener('click', e=>{
+  const btn = e.target.closest('button'); if(!btn) return; applyLang(btn.dataset.lang);
+});
+
+const themeBtn = document.getElementById('themeBtn');
+const themeIcon = document.getElementById('themeIcon');
+function setTheme(t){
+  document.documentElement.dataset.theme = t;
+  themeIcon.innerHTML = t === 'dark'
+    ? '<circle cx="12" cy="12" r="4.2"/><path d="M12 3v2M12 19v2M4.2 12H2M22 12h-2.2M5.6 5.6l1.5 1.5M16.9 16.9l1.5 1.5M18.4 5.6l-1.5 1.5M7.1 16.9l-1.5 1.5"/>'
+    : '<path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5Z"/>';
+}
+themeBtn.addEventListener('click', ()=> setTheme(document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark'));
+
+/* Sidebar tab switching */
+document.querySelectorAll('.sb-item[data-screen]').forEach(item=>{
+  item.addEventListener('click', ()=>{
+    document.querySelectorAll('.sb-item[data-screen]').forEach(i=> i.classList.remove('active'));
+    item.classList.add('active');
+    document.querySelectorAll('.screen').forEach(s=> s.classList.remove('active'));
+    document.getElementById('screen-' + item.dataset.screen).classList.add('active');
+  });
+});
+
+/* POS demo */
+const products = [
+  { en:"Arabic Coffee", ar:"قهوة عربية", ku:"قاوەی عەرەبی", price:8000 },
+  { en:"Notebook A5", ar:"دفتر A5", ku:"نووتبووک A5", price:2500 },
+  { en:"Wireless Mouse", ar:"ماوس لاسلكي", ku:"مووسی بێتەل", price:15000 },
+  { en:"LED Desk Lamp", ar:"مصباح مكتب", ku:"چرای مێز", price:22000 },
+  { en:"Water Bottle 1L", ar:"قنينة ماء ١ل", ku:"بەتری ئاو ١ل", price:3000 },
+  { en:"Headphones", ar:"سماعة", ku:"هێدفۆن", price:45000 },
+];
+const grid = document.getElementById('productGrid');
+products.forEach((p,i)=>{
+  const btn = document.createElement('button');
+  btn.className = 'pill';
+  btn.innerHTML = `<span class="pname" data-p="${i}">${p.en}</span><span class="pprice">${p.price.toLocaleString()} IQD</span>`;
+  btn.addEventListener('click', ()=> addLine(p));
+  grid.appendChild(btn);
+});
+function currentLang(){ const a = document.querySelector('#langSeg button.active'); return a ? a.dataset.lang : 'en'; }
+
+const receiptBody = document.getElementById('receiptBody');
+const totalVal = document.getElementById('totalVal');
+const ticketNo = document.getElementById('ticketNo');
+let total = 0, ticket = 482, lineCount = 0;
+function addLine(p){
+  if(lineCount === 0){ receiptBody.innerHTML = ''; }
+  const row = document.createElement('div');
+  row.className = 'rline';
+  row.innerHTML = `<span>${p[currentLang()]}</span><span>${p.price.toLocaleString()} IQD</span>`;
+  receiptBody.appendChild(row); receiptBody.scrollTop = receiptBody.scrollHeight;
+  total += p.price; lineCount++;
+  totalVal.textContent = total.toLocaleString() + ' IQD';
+  totalVal.classList.add('flash'); setTimeout(()=> totalVal.classList.remove('flash'), 260);
+}
+document.getElementById('newSaleBtn').addEventListener('click', ()=>{
+  total = 0; lineCount = 0; ticket++;
+  totalVal.textContent = '0 IQD';
+  ticketNo.textContent = '#DH-' + String(ticket).padStart(6,'0');
+  receiptBody.innerHTML = `<p class="rempty">${dict[currentLang()].hero_cta_hint}</p>`;
+});
+function stampTime(){
+  const d = new Date();
+  document.getElementById('ticketTime').textContent = d.toLocaleDateString('en-GB',{day:'2-digit',month:'2-digit'}) + ' ' + d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+}
+stampTime();
+
+const bars = document.querySelectorAll('#barChart .bar-col');
+const chartObserver = new IntersectionObserver(entries=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting){
+      bars.forEach((col,i)=> setTimeout(()=>{ col.querySelector('.bar').style.height = col.dataset.h + '%'; }, i*80));
+      chartObserver.disconnect();
+    }
+  });
+}, { threshold:0.3 });
+chartObserver.observe(document.getElementById('barChart'));
+
+const feats = document.querySelectorAll('.feat');
+const featObserver = new IntersectionObserver(entries=>{
+  entries.forEach((entry,i)=>{
+    if(entry.isIntersecting){ setTimeout(()=> entry.target.classList.add('in'), i*40); featObserver.unobserve(entry.target); }
+  });
+}, { threshold:0.15 });
+feats.forEach(f=> featObserver.observe(f));
+</script>
+</body>
+</html>
