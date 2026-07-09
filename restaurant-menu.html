@@ -1,0 +1,1194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurant Menu - Portfolio Demo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #ff6b35;
+            --primary-dark: #e55a2b;
+            --secondary: #004e89;
+            --success: #2d6a4f;
+            --danger: #d62828;
+            --warning: #f77f00;
+            --bg-light: #f8f9fa;
+            --bg-white: #ffffff;
+            --text-dark: #212529;
+            --text-muted: #6c757d;
+            --border: #dee2e6;
+            --shadow: 0 2px 8px rgba(0,0,0,0.1);
+            --shadow-lg: 0 8px 24px rgba(0,0,0,0.15);
+            --radius: 12px;
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg-light);
+            color: var(--text-dark);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        body[dir="rtl"] {
+            font-family: 'Cairo', sans-serif;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            border-radius: var(--radius);
+            margin-bottom: 30px;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.95;
+        }
+
+        /* Language Switcher */
+        .lang-switcher {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .lang-btn {
+            padding: 8px 20px;
+            border: 2px solid white;
+            background: transparent;
+            color: white;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .lang-btn:hover, .lang-btn.active {
+            background: white;
+            color: var(--primary);
+        }
+
+        /* Search Bar */
+        .search-bar {
+            position: relative;
+            margin-bottom: 30px;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 15px 50px 15px 20px;
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            font-size: 1rem;
+            background: white;
+            transition: var(--transition);
+        }
+
+        body[dir="rtl"] .search-bar input {
+            padding: 15px 20px 15px 50px;
+        }
+
+        .search-bar input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.2rem;
+            color: var(--text-muted);
+        }
+
+        body[dir="rtl"] .search-icon {
+            right: auto;
+            left: 20px;
+        }
+
+        /* Category Tabs */
+        .category-tabs {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding: 10px 0;
+            margin-bottom: 30px;
+            scrollbar-width: thin;
+        }
+
+        .category-tabs::-webkit-scrollbar {
+            height: 6px;
+        }
+
+        .category-tabs::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 3px;
+        }
+
+        .tab-btn {
+            padding: 12px 24px;
+            border: none;
+            background: white;
+            color: var(--text-dark);
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            white-space: nowrap;
+            transition: var(--transition);
+            box-shadow: var(--shadow);
+        }
+
+        .tab-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .tab-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Menu Grid */
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .menu-card {
+            background: white;
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .menu-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .card-image {
+            position: relative;
+            height: 220px;
+            overflow: hidden;
+        }
+
+        .card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .menu-card:hover .card-image img {
+            transform: scale(1.1);
+        }
+
+        .card-badges {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            display: flex;
+            gap: 8px;
+        }
+
+        body[dir="rtl"] .card-badges {
+            right: auto;
+            left: 10px;
+        }
+
+        .badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: white;
+            backdrop-filter: blur(10px);
+        }
+
+        .badge-veg {
+            background: rgba(45, 106, 79, 0.9);
+        }
+
+        .badge-spicy {
+            background: rgba(214, 40, 40, 0.9);
+        }
+
+        .card-content {
+            padding: 20px;
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--text-dark);
+        }
+
+        .card-description {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+        }
+
+        .card-price {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .card-time {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        .add-btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            background: var(--primary);
+            color: white;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 15px;
+        }
+
+        .add-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        /* Floating Cart Button */
+        .floating-cart {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 70px;
+            height: 70px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            cursor: pointer;
+            box-shadow: var(--shadow-lg);
+            transition: var(--transition);
+            z-index: 1000;
+            border: none;
+        }
+
+        body[dir="rtl"] .floating-cart {
+            right: auto;
+            left: 30px;
+        }
+
+        .floating-cart:hover {
+            transform: scale(1.1);
+            background: var(--primary-dark);
+        }
+
+        .cart-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--danger);
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            font-weight: 700;
+        }
+
+        body[dir="rtl"] .cart-badge {
+            right: auto;
+            left: -5px;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            padding: 20px;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: white;
+            border-radius: var(--radius);
+            max-width: 600px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-lg);
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            position: relative;
+            height: 300px;
+        }
+
+        .modal-header img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 40px;
+            height: 40px;
+            background: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        body[dir="rtl"] .close-btn {
+            right: auto;
+            left: 15px;
+        }
+
+        .close-btn:hover {
+            background: var(--danger);
+            color: white;
+        }
+
+        .modal-body {
+            padding: 30px;
+        }
+
+        .modal-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .modal-description {
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            line-height: 1.8;
+        }
+
+        .modal-info {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .info-chip {
+            padding: 8px 16px;
+            background: var(--bg-light);
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .modal-price {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin: 20px 0;
+        }
+
+        .modal-add-btn {
+            width: 100%;
+            padding: 15px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .modal-add-btn:hover {
+            background: var(--primary-dark);
+        }
+
+        /* Cart Modal */
+        .cart-modal {
+            max-width: 500px;
+        }
+
+        .cart-header {
+            padding: 25px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .cart-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .cart-items {
+            padding: 20px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .cart-item {
+            display: flex;
+            gap: 15px;
+            padding: 15px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .cart-item:last-child {
+            border-bottom: none;
+        }
+
+        .cart-item-image {
+            width: 80px;
+            height: 80px;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+
+        .cart-item-info {
+            flex: 1;
+        }
+
+        .cart-item-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .cart-item-price {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .cart-item-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .qty-btn {
+            width: 30px;
+            height: 30px;
+            border: 2px solid var(--border);
+            background: white;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            transition: var(--transition);
+        }
+
+        .qty-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .cart-item-qty {
+            font-weight: 700;
+            min-width: 30px;
+            text-align: center;
+        }
+
+        .cart-item-total {
+            font-weight: 700;
+            color: var(--primary);
+            min-width: 80px;
+            text-align: right;
+        }
+
+        body[dir="rtl"] .cart-item-total {
+            text-align: left;
+        }
+
+        .cart-footer {
+            padding: 25px;
+            border-top: 2px solid var(--border);
+        }
+
+        .cart-total {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .cart-total-label {
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .cart-total-amount {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .checkout-btn {
+            width: 100%;
+            padding: 15px;
+            background: var(--success);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .checkout-btn:hover {
+            background: #1b4332;
+        }
+
+        .empty-cart {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-muted);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .menu-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                gap: 15px;
+            }
+
+            .floating-cart {
+                width: 60px;
+                height: 60px;
+                bottom: 20px;
+                right: 20px;
+            }
+
+            body[dir="rtl"] .floating-cart {
+                right: auto;
+                left: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .menu-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1 id="menuTitle">Our Menu</h1>
+            <p id="menuSubtitle">Discover our delicious dishes</p>
+            <div class="lang-switcher">
+                <button class="lang-btn active" data-lang="en">English</button>
+                <button class="lang-btn" data-lang="ar">العربية</button>
+                <button class="lang-btn" data-lang="ku">کوردی</button>
+            </div>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="search-bar">
+            <input type="text" id="searchInput" placeholder="Search dishes...">
+            <span class="search-icon">🔍</span>
+        </div>
+
+        <!-- Category Tabs -->
+        <div class="category-tabs" id="categoryTabs"></div>
+
+        <!-- Menu Grid -->
+        <div class="menu-grid" id="menuGrid"></div>
+    </div>
+
+    <!-- Floating Cart Button -->
+    <button class="floating-cart" id="floatingCart" style="display: none;">
+        🛒
+        <span class="cart-badge" id="cartBadge">0</span>
+    </button>
+
+    <!-- Item Detail Modal -->
+    <div class="modal-overlay" id="itemModal">
+        <div class="modal">
+            <div class="modal-header">
+                <img id="modalImage" src="" alt="">
+                <button class="close-btn" onclick="closeItemModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <h2 class="modal-title" id="modalTitle"></h2>
+                <p class="modal-description" id="modalDescription"></p>
+                <div class="modal-info" id="modalInfo"></div>
+                <div class="modal-price" id="modalPrice"></div>
+                <button class="modal-add-btn" id="modalAddBtn">Add to Cart</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cart Modal -->
+    <div class="modal-overlay" id="cartModal">
+        <div class="modal cart-modal">
+            <div class="cart-header">
+                <h2 class="cart-title" id="cartTitle">Your Cart</h2>
+            </div>
+            <div class="cart-items" id="cartItems"></div>
+            <div class="cart-footer">
+                <div class="cart-total">
+                    <span class="cart-total-label" id="cartTotalLabel">Total:</span>
+                    <span class="cart-total-amount" id="cartTotalAmount">$0.00</span>
+                </div>
+                <button class="checkout-btn" id="checkoutBtn">Proceed to Checkout</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Menu Data
+        const menuData = {
+            categories: [
+                { id: 0, name: 'All', name_ar: 'الكل', name_ku: 'هەموو', icon: '🍽️' },
+                { id: 1, name: 'Appetizers', name_ar: 'المقبلات', name_ku: 'پێشخواردن', icon: '🥗' },
+                { id: 2, name: 'Main Courses', name_ar: 'الأطباق الرئيسية', name_ku: 'خواردنی سەرەکی', icon: '🍖' },
+                { id: 3, name: 'Grills', name_ar: 'المشويات', name_ku: 'بریان', icon: '🔥' },
+                { id: 4, name: 'Pasta & Rice', name_ar: 'المعكرونة والأرز', name_ku: 'پاستا و برنج', icon: '🍝' },
+                { id: 5, name: 'Desserts', name_ar: 'الحلويات', name_ku: 'شیرینی', icon: '🍰' },
+                { id: 6, name: 'Beverages', name_ar: 'المشروبات', name_ku: 'خواردنەوە', icon: '🥤' }
+            ],
+            items: [
+                {
+                    id: 1, name: 'Hummus', name_ar: 'حمص', name_ku: 'حومmus',
+                    description: 'Creamy chickpea dip with tahini, lemon, and olive oil',
+                    description_ar: 'حمص كريمي مع الطحينة والليمون وزيت الزيتون',
+                    price: 8.99, image: 'https://images.unsplash.com/photo-1577805947697-89e18249d767?w=400&h=300&fit=crop',
+                    category_id: 1, is_vegetarian: true, prep_time: 5, calories: 180
+                },
+                {
+                    id: 2, name: 'Falafel Plate', name_ar: 'طبق فلافل', name_ku: 'پلێتی فەلافل',
+                    description: 'Crispy falafel balls with tahini sauce and fresh vegetables',
+                    description_ar: 'كرات فلافل مقرمشة مع صلصة الطحينة والخضروات الطازجة',
+                    price: 12.99, image: 'https://images.unsplash.com/photo-1593001874117-c99c800e3eb7?w=400&h=300&fit=crop',
+                    category_id: 1, is_vegetarian: true, prep_time: 10, calories: 320
+                },
+                {
+                    id: 3, name: 'Chicken Shawarma', name_ar: 'شاورما دجاج', name_ku: 'شاوەرما مریشک',
+                    description: 'Marinated chicken with garlic sauce, pickles, and fresh vegetables',
+                    description_ar: 'دجاج متبل مع صلصة الثوم والمخللات والخضروات الطازجة',
+                    price: 15.99, image: 'https://images.unsplash.com/photo-1529006557810-274b9b2fc783?w=400&h=300&fit=crop',
+                    category_id: 2, prep_time: 15, calories: 450
+                },
+                {
+                    id: 4, name: 'Lamb Kabsa', name_ar: 'كبسة لحم', name_ku: 'کەبسای گوشتی بەڕانی',
+                    description: 'Traditional spiced rice with tender lamb and aromatic spices',
+                    description_ar: 'أرز متبل تقليدي مع لحم طري وتوابل عطرية',
+                    price: 22.99, image: 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=400&h=300&fit=crop',
+                    category_id: 2, prep_time: 25, calories: 680
+                },
+                {
+                    id: 5, name: 'Mixed Grill', name_ar: 'مشاوي مشكل', name_ku: 'پلێتی بریاوی تێکەڵ',
+                    description: 'Assortment of grilled meats including lamb, chicken, and kofta',
+                    description_ar: 'تشكيلة من اللحوم المشوية تشمل الضأن والدجاج والكفتة',
+                    price: 32.99, image: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=400&h=300&fit=crop',
+                    category_id: 3, prep_time: 30, calories: 850
+                },
+                {
+                    id: 6, name: 'Chicken Tikka', name_ar: 'تيكا دجاج', name_ku: 'تیکای مریشک',
+                    description: 'Marinated chicken pieces grilled to perfection with spices',
+                    description_ar: 'قطع دجاج متبلة مشوية إلى الكمال مع التوابل',
+                    price: 18.99, image: 'https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=400&h=300&fit=crop',
+                    category_id: 3, is_spicy: true, prep_time: 20, calories: 420
+                },
+                {
+                    id: 7, name: 'Chicken Biryani', name_ar: 'برياني دجاج', name_ku: 'بریانی مریشک',
+                    description: 'Fragrant basmati rice with tender chicken and aromatic spices',
+                    description_ar: 'أرز بسمتي عطر مع دجاج طري وتوابل عطرية',
+                    price: 16.99, image: 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=400&h=300&fit=crop',
+                    category_id: 4, is_spicy: true, prep_time: 25, calories: 580
+                },
+                {
+                    id: 8, name: 'Spaghetti Bolognese', name_ar: 'سباغيتي بولونيز', name_ku: 'سپاگێتی بۆلۆنییز',
+                    description: 'Classic Italian pasta with rich meat sauce and parmesan',
+                    description_ar: 'معكرونة إيطالية كلاسيكية مع صلصة لحم غنية وجبن بارميزان',
+                    price: 14.99, image: 'https://images.unsplash.com/photo-1551183053-bf91a1d81141?w=400&h=300&fit=crop',
+                    category_id: 4, prep_time: 15, calories: 620
+                },
+                {
+                    id: 9, name: 'Baklava', name_ar: 'بقلاوة', name_ku: 'باقلاڤا',
+                    description: 'Layers of flaky pastry with nuts and honey syrup',
+                    description_ar: 'طبقات من المعجنات الرقيقة مع المكسرات وشراب العسل',
+                    price: 7.99, image: 'https://images.unsplash.com/photo-1598110750624-207050c2a08c?w=400&h=300&fit=crop',
+                    category_id: 5, is_vegetarian: true, prep_time: 5, calories: 380
+                },
+                {
+                    id: 10, name: 'Kunafa', name_ar: 'كنافة', name_ku: 'کونافا',
+                    description: 'Sweet cheese pastry soaked in sugar syrup',
+                    description_ar: 'معجنات الجبن الحلوة منقوعة في شراب السكر',
+                    price: 9.99, image: 'https://images.unsplash.com/photo-1579888944880-d98341245702?w=400&h=300&fit=crop',
+                    category_id: 5, is_vegetarian: true, prep_time: 10, calories: 450
+                },
+                {
+                    id: 11, name: 'Fresh Orange Juice', name_ar: 'عصير برتقال طازج', name_ku: 'شربەتی پرتەقاڵی تازە',
+                    description: 'Freshly squeezed orange juice',
+                    description_ar: 'عصير برتقال معصور طازج',
+                    price: 5.99, image: 'https://images.unsplash.com/photo-1600271886742-f049cd451bba?w=400&h=300&fit=crop',
+                    category_id: 6, is_vegetarian: true, prep_time: 3, calories: 110
+                },
+                {
+                    id: 12, name: 'Arabic Coffee', name_ar: 'قهوة عربية', name_ku: 'قاوەی عەرەبی',
+                    description: 'Traditional Arabic coffee with cardamom',
+                    description_ar: 'قهوة عربية تقليدية مع الهيل',
+                    price: 4.99, image: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=400&h=300&fit=crop',
+                    category_id: 6, is_vegetarian: true, prep_time: 5, calories: 5
+                }
+            ]
+        };
+
+        // Translations
+        const translations = {
+            en: {
+                menuTitle: 'Our Menu',
+                menuSubtitle: 'Discover our delicious dishes',
+                searchPlaceholder: 'Search dishes...',
+                addToCart: 'Add to Cart',
+                yourCart: 'Your Cart',
+                total: 'Total:',
+                checkout: 'Proceed to Checkout',
+                emptyCart: 'Your cart is empty',
+                min: 'min',
+                cal: 'cal',
+                vegetarian: 'Vegetarian',
+                spicy: 'Spicy'
+            },
+            ar: {
+                menuTitle: 'قائمتنا',
+                menuSubtitle: 'اكتشف أطباقنا اللذيذة',
+                searchPlaceholder: 'ابحث عن الأطباق...',
+                addToCart: 'أضف إلى السلة',
+                yourCart: 'سلتك',
+                total: 'المجموع:',
+                checkout: 'المتابعة إلى الدفع',
+                emptyCart: 'سلتك فارغة',
+                min: 'دقيقة',
+                cal: 'سعرة',
+                vegetarian: 'نباتي',
+                spicy: 'حار'
+            },
+            ku: {
+                menuTitle: 'مێنیوی ئێمە',
+                menuSubtitle: 'خواردنە خۆشەکانمان بدۆزەرەوە',
+                searchPlaceholder: 'گەڕان بۆ خواردن...',
+                addToCart: 'زیادکردن بۆ سەبەتە',
+                yourCart: 'سەبەتەکەت',
+                total: 'کۆی گشتی:',
+                checkout: 'بەردەوامبوون بۆ پارەدان',
+                emptyCart: 'سەبەتەکەت بەتاڵە',
+                min: 'خولەک',
+                cal: 'کالۆری',
+                vegetarian: 'ڕووەکی',
+                spicy: 'تیژ'
+            }
+        };
+
+        // State
+        let currentLang = 'en';
+        let currentCategory = 0;
+        let cart = [];
+        let selectedItem = null;
+
+        // Initialize
+        function init() {
+            renderCategories();
+            renderMenu();
+            setupEventListeners();
+        }
+
+        // Render Categories
+        function renderCategories() {
+            const tabsContainer = document.getElementById('categoryTabs');
+            tabsContainer.innerHTML = menuData.categories.map(cat => `
+                <button class="tab-btn ${cat.id === currentCategory ? 'active' : ''}" data-category="${cat.id}">
+                    ${getCategoryName(cat)} ${cat.icon}
+                </button>
+            `).join('');
+        }
+
+        // Render Menu
+        function renderMenu() {
+            const grid = document.getElementById('menuGrid');
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            
+            let filteredItems = menuData.items.filter(item => {
+                const matchCategory = currentCategory === 0 || item.category_id === currentCategory;
+                const matchSearch = !searchTerm || 
+                    item.name.toLowerCase().includes(searchTerm) ||
+                    item.description.toLowerCase().includes(searchTerm) ||
+                    (item.name_ar && item.name_ar.includes(searchTerm)) ||
+                    (item.name_ku && item.name_ku.includes(searchTerm));
+                return matchCategory && matchSearch;
+            });
+
+            grid.innerHTML = filteredItems.map(item => `
+                <div class="menu-card" data-item-id="${item.id}">
+                    <div class="card-image">
+                        <img src="${item.image}" alt="${getItemName(item)}">
+                        <div class="card-badges">
+                            ${item.is_vegetarian ? `<span class="badge badge-veg">🌱 ${translations[currentLang].vegetarian}</span>` : ''}
+                            ${item.is_spicy ? `<span class="badge badge-spicy">🌶️ ${translations[currentLang].spicy}</span>` : ''}
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">${getItemName(item)}</h3>
+                        <p class="card-description">${getItemDescription(item)}</p>
+                        <div class="card-footer">
+                            <span class="card-price">$${item.price.toFixed(2)}</span>
+                            <span class="card-time">⏱️ ${item.prep_time} ${translations[currentLang].min}</span>
+                        </div>
+                        <button class="add-btn" data-add-item="${item.id}">${translations[currentLang].addToCart}</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Get localized names
+        function getCategoryName(category) {
+            if (currentLang === 'ar' && category.name_ar) return category.name_ar;
+            if (currentLang === 'ku' && category.name_ku) return category.name_ku;
+            return category.name;
+        }
+
+        function getItemName(item) {
+            if (currentLang === 'ar' && item.name_ar) return item.name_ar;
+            if (currentLang === 'ku' && item.name_ku) return item.name_ku;
+            return item.name;
+        }
+
+        function getItemDescription(item) {
+            if (currentLang === 'ar' && item.description_ar) return item.description_ar;
+            if (currentLang === 'ku' && item.description_ku) return item.description_ku;
+            return item.description;
+        }
+
+        // Setup Event Listeners
+        function setupEventListeners() {
+            // Language switcher
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    currentLang = btn.dataset.lang;
+                    document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    
+                    if (currentLang === 'ar') {
+                        document.body.dir = 'rtl';
+                        document.documentElement.lang = 'ar';
+                    } else if (currentLang === 'ku') {
+                        document.body.dir = 'rtl';
+                        document.documentElement.lang = 'ku';
+                    } else {
+                        document.body.dir = 'ltr';
+                        document.documentElement.lang = 'en';
+                    }
+                    
+                    updateTranslations();
+                    renderCategories();
+                    renderMenu();
+                });
+            });
+
+            // Category tabs
+            document.getElementById('categoryTabs').addEventListener('click', (e) => {
+                if (e.target.classList.contains('tab-btn')) {
+                    currentCategory = parseInt(e.target.dataset.category);
+                    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+                    e.target.classList.add('active');
+                    renderMenu();
+                }
+            });
+
+            // Search
+            document.getElementById('searchInput').addEventListener('input', renderMenu);
+
+            // Menu card clicks
+            document.getElementById('menuGrid').addEventListener('click', (e) => {
+                const card = e.target.closest('.menu-card');
+                if (card) {
+                    const itemId = parseInt(card.dataset.itemId);
+                    const item = menuData.items.find(i => i.id === itemId);
+                    
+                    if (e.target.classList.contains('add-btn') || e.target.closest('.add-btn')) {
+                        addToCart(item);
+                    } else {
+                        openItemModal(item);
+                    }
+                }
+            });
+
+            // Floating cart
+            document.getElementById('floatingCart').addEventListener('click', openCartModal);
+
+            // Close modals on overlay click
+            document.querySelectorAll('.modal-overlay').forEach(overlay => {
+                overlay.addEventListener('click', (e) => {
+                    if (e.target === overlay) {
+                        overlay.classList.remove('active');
+                    }
+                });
+            });
+        }
+
+        // Update translations
+        function updateTranslations() {
+            const t = translations[currentLang];
+            document.getElementById('menuTitle').textContent = t.menuTitle;
+            document.getElementById('menuSubtitle').textContent = t.menuSubtitle;
+            document.getElementById('searchInput').placeholder = t.searchPlaceholder;
+            document.getElementById('cartTitle').textContent = t.yourCart;
+            document.getElementById('cartTotalLabel').textContent = t.total;
+            document.getElementById('checkoutBtn').textContent = t.checkout;
+        }
+
+        // Cart functions
+        function addToCart(item) {
+            const existing = cart.find(c => c.item.id === item.id);
+            if (existing) {
+                existing.quantity++;
+            } else {
+                cart.push({ item, quantity: 1 });
+            }
+            updateCartUI();
+            showNotification('Added to cart!');
+        }
+
+        function updateCartQuantity(itemId, change) {
+            const cartItem = cart.find(c => c.item.id === itemId);
+            if (cartItem) {
+                cartItem.quantity += change;
+                if (cartItem.quantity <= 0) {
+                    cart = cart.filter(c => c.item.id !== itemId);
+                }
+            }
+            updateCartUI();
+            renderCartItems();
+        }
+
+        function updateCartUI() {
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            const floatingCart = document.getElementById('floatingCart');
+            const cartBadge = document.getElementById('cartBadge');
+            
+            if (totalItems > 0) {
+                floatingCart.style.display = 'flex';
+                cartBadge.textContent = totalItems;
+            } else {
+                floatingCart.style.display = 'none';
+            }
+        }
+
+        function renderCartItems() {
+            const cartItemsContainer = document.getElementById('cartItems');
+            const t = translations[currentLang];
+            
+            if (cart.length === 0) {
+                cartItemsContainer.innerHTML = `<div class="empty-cart">${t.emptyCart}</div>`;
+                document.getElementById('cartTotalAmount').textContent = '$0.00';
+                return;
+            }
+
+            cartItemsContainer.innerHTML = cart.map(cartItem => `
+                <div class="cart-item">
+                    <img src="${cartItem.item.image}" alt="${getItemName(cartItem.item)}" class="cart-item-image">
+                    <div class="cart-item-info">
+                        <div class="cart-item-name">${getItemName(cartItem.item)}</div>
+                        <div class="cart-item-price">$${cartItem.item.price.toFixed(2)}</div>
+                    </div>
+                    <div class="cart-item-controls">
+                        <button class="qty-btn" onclick="updateCartQuantity(${cartItem.item.id}, -1)">−</button>
+                        <span class="cart-item-qty">${cartItem.quantity}</span>
+                        <button class="qty-btn" onclick="updateCartQuantity(${cartItem.item.id}, 1)">+</button>
+                    </div>
+                    <div class="cart-item-total">$${(cartItem.item.price * cartItem.quantity).toFixed(2)}</div>
+                </div>
+            `).join('');
+
+            const total = cart.reduce((sum, item) => sum + (item.item.price * item.quantity), 0);
+            document.getElementById('cartTotalAmount').textContent = `$${total.toFixed(2)}`;
+        }
+
+        // Modal functions
+        function openItemModal(item) {
+            selectedItem = item;
+            const t = translations[currentLang];
+            
+            document.getElementById('modalImage').src = item.image;
+            document.getElementById('modalTitle').textContent = getItemName(item);
+            document.getElementById('modalDescription').textContent = getItemDescription(item);
+            document.getElementById('modalPrice').textContent = `$${item.price.toFixed(2)}`;
+            document.getElementById('modalAddBtn').textContent = t.addToCart;
+            
+            const info = [];
+            if (item.is_vegetarian) info.push(`🌱 ${t.vegetarian}`);
+            if (item.is_spicy) info.push(`🌶️ ${t.spicy}`);
+            if (item.prep_time) info.push(`⏱️ ${item.prep_time} ${t.min}`);
+            if (item.calories) info.push(`🔥 ${item.calories} ${t.cal}`);
+            
+            document.getElementById('modalInfo').innerHTML = info.map(i => `<span class="info-chip">${i}</span>`).join('');
+            
+            document.getElementById('itemModal').classList.add('active');
+        }
+
+        function closeItemModal() {
+            document.getElementById('itemModal').classList.remove('active');
+        }
+
+        function openCartModal() {
+            renderCartItems();
+            document.getElementById('cartModal').classList.add('active');
+        }
+
+        // Notification
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: var(--success);
+                color: white;
+                padding: 15px 25px;
+                border-radius: 8px;
+                box-shadow: var(--shadow-lg);
+                z-index: 3000;
+                animation: slideIn 0.3s ease;
+            `;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => notification.remove(), 300);
+            }, 2000);
+        }
+
+        // Add animations
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Modal add button
+        document.getElementById('modalAddBtn').addEventListener('click', () => {
+            if (selectedItem) {
+                addToCart(selectedItem);
+                closeItemModal();
+            }
+        });
+
+        // Checkout button
+        document.getElementById('checkoutBtn').addEventListener('click', () => {
+            if (cart.length > 0) {
+                alert('Checkout functionality would be implemented here!');
+                cart = [];
+                updateCartUI();
+                document.getElementById('cartModal').classList.remove('active');
+            }
+        });
+
+        // Initialize app
+        init();
+    </script>
+</body>
+</html>
