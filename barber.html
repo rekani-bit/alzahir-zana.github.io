@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kurd — Barber Shop</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Libre+Baskerville:ital@0;1&family=Inter:wght@400;500;600&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#161311; --ink-soft:#2A2420; --paper:#EDE6D6; --paper-dim:#C9BFA8;
+  --oxblood:#7C2F2A; --oxblood-bright:#A5453D; --brass:#BE9553; --brass-bright:#D9B679;
+  --steel:#4E5E5F; --line:rgba(237,230,214,0.14); --line-dark:rgba(22,19,17,0.12);
+  --display:'Bebas Neue',sans-serif; --serif:'Libre Baskerville',serif; --body:'Inter',sans-serif; --mono:'IBM Plex Mono',monospace;
+}
+*{ box-sizing:border-box; }
+html{ scroll-behavior:smooth; }
+html[dir="rtl"] body{ font-family:'IBM Plex Sans Arabic', var(--body); }
+html[dir="rtl"] h1,html[dir="rtl"] h2,html[dir="rtl"] h3{ font-family:'IBM Plex Sans Arabic', var(--display); font-weight:700; letter-spacing:0; }
+html[dir="rtl"] .eyebrow, html[dir="rtl"] .tr-price, html[dir="rtl"] .tr-time, html[dir="rtl"] .brand-text span,
+html[dir="rtl"] .chalk-item span:last-child, html[dir="rtl"] .info-row span:last-child, html[dir="rtl"] .who,
+html[dir="rtl"] .foot-note, html[dir="rtl"] .form-note, html[dir="rtl"] .chair-num{ font-family:var(--mono); }
+body{ margin:0; background:var(--ink); color:var(--paper); font-family:var(--body); line-height:1.6; -webkit-font-smoothing:antialiased; }
+.wrap{ max-width:1180px; margin:0 auto; padding:0 28px; }
+@media (max-width:640px){ .wrap{ padding:0 20px; } }
+h1,h2,h3{ font-family:var(--display); font-weight:400; letter-spacing:.02em; margin:0; }
+a{ color:inherit; }
+img,svg{ display:block; }
+
+/* Barber pole signature — used as section dividers */
+.pole-rule{ height:10px; width:100%; background:repeating-linear-gradient(-45deg, var(--oxblood) 0 14px, var(--paper) 14px 28px, var(--steel) 28px 42px); opacity:.9; }
+.pole-rule.thin{ height:5px; }
+
+/* Nav */
+.sitenav{ position:sticky; top:0; z-index:50; background:color-mix(in srgb, var(--ink) 92%, transparent); backdrop-filter:blur(8px); border-bottom:1px solid var(--line); }
+.nav-inner{ display:flex; align-items:center; justify-content:space-between; padding:16px 0; gap:16px; flex-wrap:wrap; }
+.brand{ display:flex; align-items:center; gap:10px; }
+.brand-mark{ width:34px; height:34px; border-radius:50%; background:var(--oxblood); position:relative; overflow:hidden; flex:none; border:2px solid var(--brass); }
+.brand-mark::before{ content:""; position:absolute; inset:-30% -10%; background:repeating-linear-gradient(-45deg, var(--paper) 0 5px, transparent 5px 10px); }
+.brand-text b{ font-family:var(--display); font-size:22px; letter-spacing:.03em; display:block; line-height:1; }
+html[dir="rtl"] .brand-text b{ font-family:'IBM Plex Sans Arabic', var(--display); font-weight:700; }
+.brand-text span{ font-family:var(--mono); font-size:9.5px; color:var(--brass); letter-spacing:.16em; text-transform:uppercase; }
+.nav-links{ display:flex; gap:30px; font-size:13.5px; }
+.nav-links a{ text-decoration:none; color:var(--paper-dim); border-bottom:1px solid transparent; padding-bottom:2px; }
+.nav-links a:hover{ color:var(--brass-bright); border-color:var(--brass-bright); }
+@media (max-width:900px){ .nav-links{ display:none; } }
+.nav-right{ display:flex; align-items:center; gap:14px; }
+.lang-seg{ display:flex; border:1px solid var(--line); border-radius:6px; overflow:hidden; }
+.lang-seg button{ font-family:var(--mono); font-size:11px; padding:8px 11px; background:transparent; border:none; color:var(--paper-dim); cursor:pointer; border-inline-start:1px solid var(--line); }
+.lang-seg button:first-child{ border-inline-start:none; }
+.lang-seg button.active{ background:var(--brass); color:var(--ink); }
+.nav-cta{ font-family:var(--mono); font-size:12px; letter-spacing:.03em; background:var(--brass); color:var(--ink); border:none; padding:11px 18px; cursor:pointer; text-decoration:none; display:inline-block; }
+html[dir="rtl"] .nav-cta{ font-family:'IBM Plex Sans Arabic'; font-weight:600; }
+.nav-cta:hover{ background:var(--brass-bright); }
+
+/* Hero */
+.hero{ padding:74px 0 56px; position:relative; }
+.hero-grid{ display:grid; grid-template-columns:1.1fr .9fr; gap:50px; align-items:center; }
+@media (max-width:900px){ .hero-grid{ grid-template-columns:1fr; } }
+.eyebrow{ font-family:var(--mono); font-size:11.5px; letter-spacing:.18em; text-transform:uppercase; color:var(--brass); display:flex; align-items:center; gap:10px; margin-bottom:18px; }
+.eyebrow::before{ content:""; width:22px; height:1px; background:var(--brass); }
+html[dir="rtl"] .eyebrow::before{ display:none; }
+html[dir="rtl"] .eyebrow::after{ content:""; width:22px; height:1px; background:var(--brass); }
+.hero h1{ font-size:clamp(46px,7vw,84px); line-height:1.02; }
+html[dir="ltr"] .hero h1{ line-height:.94; }
+.hero h1 em{ font-style:normal; color:var(--oxblood-bright); }
+.hero p.sub{ font-family:var(--serif); font-style:italic; font-size:17px; color:var(--paper-dim); max-width:42ch; margin:22px 0 0; }
+html[dir="rtl"] .hero p.sub{ font-family:'IBM Plex Sans Arabic'; font-style:normal; }
+.hero-actions{ display:flex; gap:14px; margin-top:32px; flex-wrap:wrap; }
+.btn-primary{ font-family:var(--mono); font-size:13px; letter-spacing:.03em; background:var(--oxblood); color:var(--paper); border:1px solid var(--oxblood); padding:14px 24px; cursor:pointer; text-decoration:none; display:inline-block; }
+html[dir="rtl"] .btn-primary, html[dir="rtl"] .btn-ghost{ font-family:'IBM Plex Sans Arabic'; font-weight:500; }
+.btn-primary:hover{ background:var(--oxblood-bright); }
+.btn-ghost{ font-family:var(--mono); font-size:13px; letter-spacing:.03em; background:transparent; color:var(--paper); border:1px solid var(--line); padding:14px 24px; cursor:pointer; text-decoration:none; display:inline-block; }
+.btn-ghost:hover{ border-color:var(--brass); color:var(--brass-bright); }
+
+/* Hero pole illustration */
+.hero-visual{ position:relative; display:flex; justify-content:center; }
+.pole{ width:64px; height:340px; border-radius:32px; background:repeating-linear-gradient(115deg, var(--oxblood) 0 22px, var(--paper) 22px 44px, var(--steel) 44px 66px); position:relative; border:3px solid var(--brass); box-shadow:0 30px 60px -25px rgba(0,0,0,.7); animation:spin 6s linear infinite; background-size:100px 100px; }
+@keyframes spin{ from{ background-position:0 0; } to{ background-position:0 200px; } }
+.pole-cap{ position:absolute; left:50%; transform:translateX(-50%); width:78px; height:26px; background:var(--brass); border-radius:6px; }
+.pole-cap.top{ top:-16px; }
+.pole-cap.bottom{ bottom:-16px; }
+@media (prefers-reduced-motion:reduce){ .pole{ animation:none; } }
+@media (max-width:900px){ .hero-visual{ margin-top:10px; } .pole{ height:220px; } }
+
+/* Ticket-style services */
+section{ padding:70px 0; }
+.section-head{ display:flex; align-items:flex-end; justify-content:space-between; gap:20px; margin-bottom:36px; flex-wrap:wrap; }
+.section-head h2{ font-size:clamp(28px,4vw,42px); }
+.section-head p{ font-family:var(--serif); font-style:italic; color:var(--paper-dim); margin:6px 0 0; max-width:46ch; }
+html[dir="rtl"] .section-head p{ font-family:'IBM Plex Sans Arabic'; font-style:normal; }
+
+.ticket{ border:1px solid var(--line); background:var(--ink-soft); }
+.ticket-row{ display:flex; align-items:baseline; justify-content:space-between; gap:16px; padding:20px 26px; border-bottom:1px dashed var(--line); flex-wrap:wrap; }
+.ticket-row:last-child{ border-bottom:none; }
+.ticket-row:hover{ background:rgba(190,149,83,0.06); }
+.tr-name{ font-size:17px; font-weight:500; }
+.tr-desc{ font-size:13px; color:var(--paper-dim); margin-top:4px; max-width:48ch; }
+.tr-price{ font-family:var(--mono); font-size:18px; color:var(--brass-bright); white-space:nowrap; }
+.tr-time{ font-family:var(--mono); font-size:11px; color:var(--steel); display:block; margin-top:3px; text-align:end; }
+
+/* Pricing chalkboard */
+.chalk{ background:var(--ink-soft); border:1px solid var(--line); padding:38px; position:relative; }
+.chalk::before{ content:attr(data-label); position:absolute; top:-13px; inset-inline-start:32px; background:var(--ink); padding:0 12px; font-family:var(--mono); font-size:11px; letter-spacing:.16em; color:var(--brass); }
+.chalk-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:0; }
+@media (max-width:820px){ .chalk-grid{ grid-template-columns:1fr; } }
+.chalk-col{ padding:0 26px; border-inline-start:1px solid var(--line); }
+.chalk-col:first-child{ border-inline-start:none; padding-inline-start:0; }
+@media (max-width:820px){ .chalk-col{ border-inline-start:none; border-top:1px solid var(--line); padding:26px 0 0; margin-top:26px; } .chalk-col:first-child{ border-top:none; margin-top:0; padding-top:0; } }
+.chalk-col h3{ font-size:22px; color:var(--brass-bright); margin-bottom:16px; }
+.chalk-item{ display:flex; justify-content:space-between; gap:10px; padding:9px 0; border-bottom:1px dotted var(--line-dark); font-size:14px; }
+.chalk-item span:last-child{ font-family:var(--mono); color:var(--paper); }
+
+/* Chairs / stylists */
+.chair-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--line); border:1px solid var(--line); }
+@media (max-width:820px){ .chair-grid{ grid-template-columns:1fr; } }
+.chair{ background:var(--ink); padding:30px 26px; }
+.chair-num{ font-family:var(--mono); font-size:11px; color:var(--brass); letter-spacing:.1em; }
+.chair h3{ font-size:21px; margin-top:8px; }
+.chair p.role{ font-family:var(--serif); font-style:italic; color:var(--paper-dim); font-size:13.5px; margin:4px 0 12px; }
+html[dir="rtl"] .chair p.role{ font-family:'IBM Plex Sans Arabic'; font-style:normal; }
+.chair p.bio{ font-size:13.5px; color:var(--paper-dim); }
+
+/* Booking */
+.book-wrap{ display:grid; grid-template-columns:1fr 1fr; gap:50px; align-items:start; }
+@media (max-width:900px){ .book-wrap{ grid-template-columns:1fr; } }
+.book-info .info-row{ display:flex; justify-content:space-between; padding:14px 0; border-bottom:1px solid var(--line); font-size:14px; }
+.book-info .info-row span:first-child{ color:var(--paper-dim); }
+.book-info .info-row span:last-child{ font-family:var(--mono); }
+.book-form{ background:var(--ink-soft); border:1px solid var(--line); padding:32px; }
+.field{ margin-bottom:18px; }
+.field label{ display:block; font-family:var(--mono); font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--brass); margin-bottom:8px; }
+html[dir="rtl"] .field label{ font-family:'IBM Plex Sans Arabic'; letter-spacing:0; text-transform:none; font-weight:600; }
+.field input, .field select{ width:100%; background:var(--ink); border:1px solid var(--line); color:var(--paper); padding:12px 14px; font-family:var(--body); font-size:14px; }
+html[dir="rtl"] .field input, html[dir="rtl"] .field select{ font-family:'IBM Plex Sans Arabic'; }
+.field input:focus, .field select:focus{ outline:2px solid var(--brass); outline-offset:1px; }
+.field-row{ display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+@media (max-width:480px){ .field-row{ grid-template-columns:1fr; } }
+.book-submit{ width:100%; font-family:var(--mono); font-size:13px; letter-spacing:.03em; background:var(--oxblood); color:var(--paper); border:none; padding:15px; cursor:pointer; margin-top:6px; }
+html[dir="rtl"] .book-submit{ font-family:'IBM Plex Sans Arabic'; font-weight:600; }
+.book-submit:hover{ background:var(--oxblood-bright); }
+.form-note{ font-size:12px; color:var(--steel); margin-top:12px; }
+
+/* Testimonials */
+.quote-row{ display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--line); border:1px solid var(--line); }
+@media (max-width:820px){ .quote-row{ grid-template-columns:1fr; } }
+.quote{ background:var(--ink); padding:26px 24px; }
+.quote p{ font-family:var(--serif); font-style:italic; font-size:15px; color:var(--paper); }
+html[dir="rtl"] .quote p{ font-family:'IBM Plex Sans Arabic'; font-style:normal; }
+.quote .who{ font-family:var(--mono); font-size:11px; color:var(--brass); margin-top:14px; letter-spacing:.05em; }
+
+footer{ border-top:1px solid var(--line); padding:44px 0 34px; }
+.foot-grid{ display:flex; justify-content:space-between; gap:30px; flex-wrap:wrap; }
+.foot-grid h3{ font-size:20px; }
+.foot-grid .hours{ font-family:var(--mono); font-size:12.5px; color:var(--paper-dim); display:grid; grid-template-columns:auto auto; gap:4px 20px; margin-top:10px; }
+.foot-note{ font-family:var(--mono); font-size:11px; color:var(--steel); margin-top:30px; }
+.foot-addr{ max-width:36ch; color:var(--paper-dim); font-size:13.5px; }
+html[dir="rtl"] .foot-addr{ font-family:'IBM Plex Sans Arabic'; }
+</style>
+</head>
+<body>
+
+<nav class="sitenav">
+  <div class="wrap nav-inner">
+    <div class="brand">
+      <div class="brand-mark"></div>
+      <div class="brand-text"><b>Kurd</b><span data-i18n="brand_tag"> kurd barber </span></div>
+    </div>
+    <div class="nav-links">
+      <a href="#services" data-i18n="nl_services">Services</a>
+      <a href="#pricing" data-i18n="nl_pricing">Pricing</a>
+      <a href="#chairs" data-i18n="nl_chairs">Barbers</a>
+      <a href="#book" data-i18n="nl_book">Book</a>
+    </div>
+    <div class="nav-right">
+      <div class="lang-seg" id="langSeg">
+        <button data-lang="en" class="active">EN</button>
+        <button data-lang="ar">AR</button>
+        <button data-lang="ku">KU</button>
+      </div>
+      <a href="#book" class="nav-cta" data-i18n="nl_cta">Book a chair</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="eyebrow" data-i18n="hero_eyebrow">Walk-ins welcome, appointments preferred</div>
+      <h1 data-i18n="hero_title">Sharp cuts.<br>Honest <em data-i18n="hero_em">razor</em> work.</h1>
+      <p class="sub" data-i18n="hero_sub">A no-nonsense chair for fades, beard sculpting, and hot towel shaves — run by three barbers who've done this for a living, not a trend.</p>
+      <div class="hero-actions">
+        <a href="#book" class="btn-primary" data-i18n="hero_cta1">Reserve your chair</a>
+        <a href="#pricing" class="btn-ghost" data-i18n="hero_cta2">See the menu</a>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="pole">
+        <div class="pole-cap top"></div>
+        <div class="pole-cap bottom"></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="pole-rule"></div>
+
+<section id="services">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <h2 data-i18n="serv_title">What's on the ticket</h2>
+        <p data-i18n="serv_sub">Every service, priced plain — no upsell, no surprise at the register.</p>
+      </div>
+    </div>
+    <div class="ticket">
+      <div class="ticket-row">
+        <div><div class="tr-name" data-i18n="s1_n">Classic Cut</div><div class="tr-desc" data-i18n="s1_d">Scissor or clipper, tapered or blocked, finished with a straight-razor neckline.</div></div>
+        <div><div class="tr-price">10,000 IQD</div><span class="tr-time" data-i18n="s1_t">30 min</span></div>
+      </div>
+      <div class="ticket-row">
+        <div><div class="tr-name" data-i18n="s2_n">Skin Fade</div><div class="tr-desc" data-i18n="s2_d">Zero-to-blend fade, any length on top, hot towel finish.</div></div>
+        <div><div class="tr-price">10,000 IQD</div><span class="tr-time" data-i18n="s2_t">40 min</span></div>
+      </div>
+      <div class="ticket-row">
+        <div><div class="tr-name" data-i18n="s3_n">Beard Sculpt</div><div class="tr-desc" data-i18n="s3_d">Line-up, shape, and conditioning oil. Hot towel before and after.</div></div>
+        <div><div class="tr-price">10,000 IQD</div><span class="tr-time" data-i18n="s3_t">20 min</span></div>
+      </div>
+      <div class="ticket-row">
+        <div><div class="tr-name" data-i18n="s4_n">Hot Towel Shave</div><div class="tr-desc" data-i18n="s4_d">Straight razor, double lather, pre and post-shave balm.</div></div>
+        <div><div class="tr-price">10,000 IQD</div><span class="tr-time" data-i18n="s4_t">35 min</span></div>
+      </div>
+      <div class="ticket-row">
+        <div><div class="tr-name" data-i18n="s5_n">Cut &amp; Shave Combo</div><div class="tr-desc" data-i18n="s5_d">Full cut plus straight-razor shave — the whole chair experience.</div></div>
+        <div><div class="tr-price">15,000 IQD</div><span class="tr-time" data-i18n="s5_t">60 min</span></div>
+      </div>
+      <div class="ticket-row">
+        <div><div class="tr-name" data-i18n="s6_n">Junior Cut (12 &amp; under)</div><div class="tr-desc" data-i18n="s6_d">Same care, smaller chair, patient hands.</div></div>
+        <div><div class="tr-price">5,000 IQD</div><span class="tr-time" data-i18n="s6_t">25 min</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="pricing" style="padding-top:0;">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <h2 data-i18n="pack_title">Packages &amp; add-ons</h2>
+        <p data-i18n="pack_sub">Bundle up for a standing appointment, or add a finishing touch to any service.</p>
+      </div>
+    </div>
+    <div class="chalk" data-i18n-attr="chalk_label">
+      <div class="chalk-grid">
+        <div class="chalk-col">
+          <h3 data-i18n="c1_h">Monthly</h3>
+          <div class="chalk-item"><span data-i18n="c1_1">2 cuts / month</span><span>20,000 IQD</span></div>
+          <div class="chalk-item"><span data-i18n="c1_2">4 cuts / month</span><span>40,000 IQD</span></div>
+          <div class="chalk-item"><span data-i18n="c1_3">Cut + beard, 4x</span><span>50,000 IQD</span></div>
+        </div>
+        <div class="chalk-col">
+          <h3 data-i18n="c2_h">Add-ons</h3>
+          <div class="chalk-item"><span data-i18n="c2_1">Hot towel refresh</span><span>2,000 IQD</span></div>
+          <div class="chalk-item"><span data-i18n="c2_2">Scalp massage</span><span>5,000 IQD</span></div>
+          <div class="chalk-item"><span data-i18n="c2_3">Beard oil treatment</span><span>5,000 IQD</span></div>
+        </div>
+        <div class="chalk-col">
+          <h3 data-i18n="c3_h">First timer</h3>
+          <div class="chalk-item"><span data-i18n="c3_1">Consult + classic cut</span><span>10,000 IQD</span></div>
+          <div class="chalk-item"><span data-i18n="c3_2">Referral discount</span><span>-2,500 IQD</span></div>
+          <div class="chalk-item"><span data-i18n="c3_3">Student rate (cut only)</span><span>5,000 IQD</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="pole-rule thin"></div>
+
+<section id="chairs">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <h2 data-i18n="ch_title">The three chairs</h2>
+        <p data-i18n="ch_sub">Book with a specific barber, or take the next open chair.</p>
+      </div>
+    </div>
+    <div class="chair-grid">
+      <div class="chair">
+        <div class="chair-num" data-i18n="ch1_num">Chair 01</div>
+        <h3> mohemed </h3>
+        <p class="role" data-i18n="ch1_role">Owner — Fades &amp; Straight Razor</p>
+        <p class="bio" data-i18n="ch1_bio">Fourteen years behind the chair. If you want a fade that still looks sharp in three weeks, this is the seat.</p>
+      </div>
+      <div class="chair">
+        <div class="chair-num" data-i18n="ch2_num">Chair 02</div>
+        <h3>ahmed</h3>
+        <p class="role" data-i18n="ch2_role">Beard Specialist</p>
+        <p class="bio" data-i18n="ch2_bio">Trained in classic barbering in Porto. Beard sculpting and hot towel shaves are her whole focus.</p>
+      </div>
+      <div class="chair">
+        <div class="chair-num" data-i18n="ch3_num">Chair 03</div>
+        <h3>kurd</h3>
+        <p class="role" data-i18n="ch3_role">Modern Cuts &amp; Texture</p>
+        <p class="bio" data-i18n="ch3_bio">Handles anything with scissor-work and texture — curls, crops, and longer styles that still need shape.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="book">
+  <div class="wrap book-wrap">
+    <div class="book-info">
+      <div class="section-head" style="margin-bottom:24px;">
+        <div>
+          <h2 data-i18n="book_title">Book your chair</h2>
+          <p data-i18n="book_sub">Fill it out, and we'll confirm by text within the hour.</p>
+        </div>
+      </div>
+      <div class="info-row"><span data-i18n="info_addr">Address</span><span data-i18n="info_addr_v">duhol</span></div>
+      <div class="info-row"><span data-i18n="info_phone">Phone</span><span>0750000000</span></div>
+      <div class="info-row"><span data-i18n="info_wait">Walk-in wait (avg)</span><span data-i18n="info_wait_v">~15 min</span></div>
+      <div class="info-row"><span data-i18n="info_next">Next open slot</span><span data-i18n="info_next_v">Today, 4:30 PM</span></div>
+    </div>
+
+    <form class="book-form" onsubmit="return handleBooking(event)">
+      <div class="field">
+        <label for="fname" data-i18n="f_name">Full name</label>
+        <input id="fname" type="text" required data-i18n-ph="f_name_ph" placeholder="Your name">
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label for="fphone" data-i18n="f_phone">Phone</label>
+          <input id="fphone" type="tel" required placeholder="(555) 000-0000">
+        </div>
+        <div class="field">
+          <label for="fservice" data-i18n="f_service">Service</label>
+          <select id="fservice">
+            <option data-i18n="sv1">Classic Cut — 10,000 IQD</option>
+            <option data-i18n="sv2">Skin Fade — 10,000 IQD</option>
+            <option data-i18n="sv3">Beard Sculpt — 10,000 IQD</option>
+            <option data-i18n="sv4">Hot Towel Shave — 10,000 IQD</option>
+            <option data-i18n="sv5">Cut &amp; Shave Combo — 15,000 IQD</option>
+          </select>
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label for="fdate" data-i18n="f_date">Date</label>
+          <input id="fdate" type="date" required>
+        </div>
+        <div class="field">
+          <label for="ftime" data-i18n="f_time">Time</label>
+          <input id="ftime" type="time" required>
+        </div>
+      </div>
+      <div class="field">
+        <label for="fbarber" data-i18n="f_barber">Preferred barber</label>
+        <select id="fbarber">
+          <option data-i18n="bv0">No preference — next available</option>
+          <option>mohemed</option>
+          <option>ahmed</option>
+          <option>kurd</option>
+        </select>
+      </div>
+      <button type="submit" class="book-submit" data-i18n="f_submit">Confirm appointment</button>
+      <p class="form-note" id="bookNote" data-i18n="f_note">This is a demo form — no booking is actually sent.</p>
+    </form>
+  </div>
+</section>
+
+<div class="pole-rule thin"></div>
+
+<section>
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <h2 data-i18n="q_title">From the chair</h2>
+      </div>
+    </div>
+    <div class="quote-row">
+      <div class="quote">
+        <p data-i18n="q1">"First fade that's actually lasted me a full three weeks without growing shapeless."</p>
+        <div class="who" data-i18n="q1_who"> coustumer </div>
+      </div>
+      <div class="quote">
+        <p data-i18n="q2">"The hot towel shave alone is worth the trip. Marcus doesn't rush it."</p>
+        <div class="who" data-i18n="q2_who"> coustumer </div>
+      </div>
+      <div class="quote">
+        <p data-i18n="q3">"Ines got my beard shape right on the first try. Been back every month since."</p>
+        <div class="who" data-i18n="q3_who"> coustumer </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot-grid">
+    <div>
+      <h3>Kurd</h3>
+      <div class="hours">
+        <span data-i18n="h_mf">Mon – Fri</span><span data-i18n="h_mf_v">9:00 AM – 7:00 PM</span>
+        <span data-i18n="h_sat">Saturday</span><span data-i18n="h_sat_v">9:00 AM – 5:00 PM</span>
+        <span data-i18n="h_sun">Sunday</span><span data-i18n="h_sun_v">Closed</span>
+      </div>
+    </div>
+    <div>
+      <p class="foot-addr" data-i18n="foot_addr">duhok  · 075000000</p>
+      <div class="foot-note" data-i18n="foot_note">Kurd Barber Shop · Static demo, no backend connected</div>
+    </div>
+  </div>
+</footer>
+
+<script>
+const dict = {
+  en:{
+    brand_tag:"kurd Barber Shop ",
+    nl_services:"Services", nl_pricing:"Pricing", nl_chairs:"Barbers", nl_book:"Book", nl_cta:"Book a chair",
+    hero_eyebrow:"Walk-ins welcome, appointments preferred",
+    hero_title:"Sharp cuts.<br>Honest <em>razor</em> work.",
+    hero_sub:"A no-nonsense chair for fades, beard sculpting, and hot towel shaves — run by three barbers who've done this for a living, not a trend.",
+    hero_cta1:"Reserve your chair", hero_cta2:"See the menu",
+    serv_title:"What's on the ticket", serv_sub:"Every service, priced plain — no upsell, no surprise at the register.",
+    s1_n:"Classic Cut", s1_d:"Scissor or clipper, tapered or blocked, finished with a straight-razor neckline.", s1_t:"30 min",
+    s2_n:"Skin Fade", s2_d:"Zero-to-blend fade, any length on top, hot towel finish.", s2_t:"40 min",
+    s3_n:"Beard Sculpt", s3_d:"Line-up, shape, and conditioning oil. Hot towel before and after.", s3_t:"20 min",
+    s4_n:"Hot Towel Shave", s4_d:"Straight razor, double lather, pre and post-shave balm.", s4_t:"35 min",
+    s5_n:"Cut &amp; Shave Combo", s5_d:"Full cut plus straight-razor shave — the whole chair experience.", s5_t:"60 min",
+    s6_n:"Junior Cut (12 &amp; under)", s6_d:"Same care, smaller chair, patient hands.", s6_t:"25 min",
+    pack_title:"Packages &amp; add-ons", pack_sub:"Bundle up for a standing appointment, or add a finishing touch to any service.",
+    chalk_label:"THE MENU",
+    c1_h:"Monthly", c1_1:"2 cuts / month", c1_2:"4 cuts / month", c1_3:"Cut + beard, 4x",
+    c2_h:"Add-ons", c2_1:"Hot towel refresh", c2_2:"Scalp massage", c2_3:"Beard oil treatment",
+    c3_h:"First timer", c3_1:"Consult + classic cut", c3_2:"Referral discount", c3_3:"Student rate (cut only)",
+    ch_title:"The three chairs", ch_sub:"Book with a specific barber, or take the next open chair.",
+    ch1_num:"Chair 01", ch1_role:"Owner — Fades &amp; Straight Razor", ch1_bio:"Fourteen years behind the chair. If you want a fade that still looks sharp in three weeks, this is the seat.",
+    ch2_num:"Chair 02", ch2_role:"Beard Specialist", ch2_bio:"Trained in classic barbering in Porto. Beard sculpting and hot towel shaves are her whole focus.",
+    ch3_num:"Chair 03", ch3_role:"Modern Cuts &amp; Texture", ch3_bio:"Handles anything with scissor-work and texture — curls, crops, and longer styles that still need shape.",
+    book_title:"Book your chair", book_sub:"Fill it out, and we'll confirm by text within the hour.",
+    info_addr:"Address", info_addr_v:"", info_phone:"Phone",
+    info_wait:"Walk-in wait (avg)", info_wait_v:"~15 min", info_next:"Next open slot", info_next_v:"Today, 4:30 PM",
+    f_name:"Full name", f_name_ph:"Your name", f_phone:"Phone", f_service:"Service",
+    sv1:"Classic Cut — 10,000 IQD", sv2:"Skin Fade — 10,000 IQD", sv3:"Beard Sculpt — 10,000 IQD",
+    sv4:"Hot Towel Shave — 10,000 IQD", sv5:"Cut &amp; Shave Combo — 15,000 IQD",
+    f_date:"Date", f_time:"Time", f_barber:"Preferred barber", bv0:"No preference — next available",
+    f_submit:"Confirm appointment", f_note:"This is a demo form — no booking is actually sent.",
+    q_title:"From the chair",
+    q1:"\u201CFirst fade that's actually lasted me a full three weeks without growing shapeless.\u201D", q1_who:"coustumer",
+    q2:"\u201CThe hot towel shave alone is worth the trip. Marcus doesn't rush it.\u201D", q2_who:"—coustumer",
+    q3:"\u201CInes got my beard shape right on the first try. Been back every month since.\u201D", q3_who:". coustumer",
+    h_mf:"Mon – Fri", h_mf_v:"9:00 AM – 7:00 PM", h_sat:"Saturday", h_sat_v:"9:00 AM – 5:00 PM", h_sun:"Sunday", h_sun_v:"Closed",
+    foot_addr:"214 Foundry Street, Riverside · (555) 041-2289", foot_note:"Kurd Barber Shop · Static demo, no backend connected",
+    thanks_prefix:"Thanks, ", thanks_suffix:" — this demo form doesn't send real bookings yet, but it's ready to connect to one.", thanks_fallback:"there"
+  },
+  ar:{
+    brand_tag:"صالون حلاقة",
+    nl_services:"الخدمات", nl_pricing:"الأسعار", nl_chairs:"الحلاقون", nl_book:"احجز", nl_cta:"احجز كرسيك",
+    hero_eyebrow:"الزيارات المباشرة مرحب بها، والمواعيد مفضّلة",
+    hero_title:"قصّات دقيقة.<br>عمل <em>موس</em> صادق.",
+    hero_sub:"كرسي بسيط وصريح للفيد، تهذيب اللحية، والحلاقة بالمنشفة الساخنة — يديره ثلاثة حلاقين احترفوا المهنة، لا موضة عابرة.",
+    hero_cta1:"احجز كرسيك", hero_cta2:"شاهد القائمة",
+    serv_title:"ما هو مطروح", serv_sub:"كل خدمة بسعر واضح — بلا زيادة مخفية وبلا مفاجآت عند الدفع.",
+    s1_n:"قصة كلاسيكية", s1_d:"مقص أو ماكينة، متدرجة أو مستقيمة، مع خط رقبة بالموس.", s1_t:"٣٠ دقيقة",
+    s2_n:"فيد كامل", s2_d:"فيد متدرج من الصفر، أي طول بالأعلى، مع لمسة منشفة ساخنة.", s2_t:"٤٠ دقيقة",
+    s3_n:"تهذيب اللحية", s3_d:"تحديد، تشكيل، وزيت عناية. منشفة ساخنة قبل وبعد.", s3_t:"٢٠ دقيقة",
+    s4_n:"حلاقة بالمنشفة الساخنة", s4_d:"موس تقليدي، رغوة مزدوجة، بلسم قبل وبعد الحلاقة.", s4_t:"٣٥ دقيقة",
+    s5_n:"قصة وحلاقة معًا", s5_d:"قصة كاملة مع حلاقة بالموس — تجربة الكرسي كاملة.", s5_t:"٦٠ دقيقة",
+    s6_n:"قصة الأطفال (١٢ سنة وأقل)", s6_d:"نفس العناية، كرسي أصغر، أيادٍ صبورة.", s6_t:"٢٥ دقيقة",
+    pack_title:"باقات وإضافات", pack_sub:"اشترك بموعد ثابت شهريًا، أو أضف لمسة أخيرة لأي خدمة.",
+    chalk_label:"القائمة",
+    c1_h:"شهريًا", c1_1:"قصتان شهريًا", c1_2:"٤ قصات شهريًا", c1_3:"قصة ولحية ×٤",
+    c2_h:"إضافات", c2_1:"منشفة ساخنة إضافية", c2_2:"تدليك فروة الرأس", c2_3:"علاج زيت اللحية",
+    c3_h:"أول زيارة", c3_1:"استشارة + قصة كلاسيكية", c3_2:"خصم الإحالة", c3_3:"سعر الطلاب (قصة فقط)",
+    ch_title:"الكراسي الثلاثة", ch_sub:"احجز مع حلاق معيّن، أو خذ أول كرسي متاح.",
+    ch1_num:"الكرسي ٠١", ch1_role:"المالك — فيد وموس تقليدي", ch1_bio:"أربعة عشر عامًا خلف الكرسي. إن أردت فيدًا يبقى أنيقًا بعد ثلاثة أسابيع، فهذا هو المقعد.",
+    ch2_num:"الكرسي ٠٢", ch2_role:"متخصصة لحى", ch2_bio:"تدربت على الحلاقة الكلاسيكية في البرتغال. تهذيب اللحية والحلاقة بالمنشفة الساخنة تخصصها الكامل.",
+    ch3_num:"الكرسي ٠٣", ch3_role:"قصّات عصرية وملمس", ch3_bio:"يتقن كل ما يتعلق بعمل المقص والملمس — تجعيد، قصات قصيرة، وأطوال تحتاج شكلًا مدروسًا.",
+    book_title:"احجز كرسيك", book_sub:"املأ النموذج، وسنؤكد لك عبر رسالة نصية خلال ساعة.",
+    info_addr:"العنوان", info_addr_v:"", info_phone:"الهاتف",
+    info_wait:"متوسط انتظار الزيارة المباشرة", info_wait_v:"~١٥ دقيقة", info_next:"أقرب موعد متاح", info_next_v:"اليوم، ٤:٣٠ مساءً",
+    f_name:"الاسم الكامل", f_name_ph:"اسمك", f_phone:"الهاتف", f_service:"الخدمة",
+    sv1:"قصة كلاسيكية — ١٥,٠٠٠ د.ع", sv2:"فيد كامل — ١٨,٠٠٠ د.ع", sv3:"تهذيب اللحية — ١٠,٠٠٠ د.ع",
+    sv4:"حلاقة بالمنشفة الساخنة — ١٦,٠٠٠ د.ع", sv5:"قصة وحلاقة معًا — ٢٧,٠٠٠ د.ع",
+    f_date:"التاريخ", f_time:"الوقت", f_barber:"الحلاق المفضل", bv0:"بدون تفضيل — أول كرسي متاح",
+    f_submit:"تأكيد الموعد", f_note:"هذا نموذج تجريبي — لا يتم إرسال أي حجز فعلي.",
+    q_title:"من الكرسي",
+    q1:"\u201Cأول فيد يبقى أنيقًا فعلًا لثلاثة أسابيع كاملة دون أن يفقد شكله.\u201D", q1_who:"coustumer",
+    q2:"\u201Cالحلاقة بالمنشفة الساخنة وحدها تستحق الزيارة. ماركوس لا يستعجل بها أبدًا.\u201D", q2_who:"coustumer",
+    q3:"\u201Cإينس ضبطت شكل لحيتي من أول محاولة. أعود كل شهر منذ ذلك الحين.\u201D", q3_who:"coustumer",
+    h_mf:"الاثنين – الجمعة", h_mf_v:"٩:٠٠ صباحًا – ٧:٠٠ مساءً", h_sat:"السبت", h_sat_v:"٩:٠٠ صباحًا – ٥:٠٠ مساءً", h_sun:"الأحد", h_sun_v:"مغلق",
+    foot_addr:" ", foot_note:"صالون كورد للحلاقة · عرض تجريبي ثابت، بلا ربط فعلي",
+    thanks_prefix:"شكرًا لك، ", thanks_suffix:" — هذا نموذج تجريبي لا يرسل حجوزات حقيقية بعد، لكنه جاهز للربط بواحد.", thanks_fallback:"عزيزنا"
+  },
+  ku:{
+    brand_tag:"دوکانی دەلاکی ",
+    nl_services:"خزمەتگوزارییەکان", nl_pricing:"نرخەکان", nl_chairs:"دەلاکەکان", nl_book:"حجزکردن", nl_cta:"کورسیت حجز بکە",
+    hero_eyebrow:"سەردانی ڕاستەوخۆ خۆشحاڵکەرە، کاتی دیاریکراو پێشتردایە",
+    hero_title:"بڕینی وردوخاش.<br>کاری <em>تیغ</em>ی ڕاستگۆ.",
+    hero_sub:"کورسییەکی سادە و ڕاستگۆ بۆ فەید، شێوەدانی ڕیش، و تاشین بە پارچەی گەرم — بەڕێوەدەبرێت لەلایەن سێ دەلاکەوە کە ئەم پیشەیان بەژیانی خۆیان زانیوە، نەک مۆدایەکی کاتی.",
+    hero_cta1:"کورسیت حجز بکە", hero_cta2:"مینیو ببینە",
+    serv_title:"ئەوەی لەسەر لیستە", serv_sub:"هەر خزمەتگوزارییەک بە نرخی ڕوون — بێ زیادکردنی شاراوە و بێ سەرسوڕمان لە کاتی پارەدان.",
+    s1_n:"بڕینی کلاسیک", s1_d:"مەقەست یان ماشین، تەدریجی یان ڕاست، بە کۆتایی گەردن بە تیغ.", s1_t:"٣٠ خولەک",
+    s2_n:"فەیدی تەواو", s2_d:"فەیدی تەدریجی لە سفرەوە، هەر درێژییەک لە سەرەوە، لەگەڵ پارچەی گەرم.", s2_t:"٤٠ خولەک",
+    s3_n:"شێوەدانی ڕیش", s3_d:"ڕێکخستن، شێوەدان، و ڕۆنی چاودێری. پارچەی گەرم پێش و پاش.", s3_t:"٢٠ خولەک",
+    s4_n:"تاشین بە پارچەی گەرم", s4_d:"تیغی نەریتی، کف دووجار، لۆشنی پێش و پاش تاشین.", s4_t:"٣٥ خولەک",
+    s5_n:"بڕین و تاشین پێکەوە", s5_d:"بڕینی تەواو لەگەڵ تاشین بە تیغ — تەواوی ئەزموونی کورسی.", s5_t:"٦٠ خولەک",
+    s6_n:"بڕینی منداڵان (١٢ ساڵ و کەمتر)", s6_d:"هەمان چاودێری، کورسیی بچووکتر، دەستی پاراستوو.", s6_t:"٢٥ خولەک",
+    pack_title:"پاکێج و زیادکراوەکان", pack_sub:"بۆ کاتێکی جێگیر پاکێجێک هەڵبژێرە، یان لمسەیەکی کۆتایی بۆ هەر خزمەتگوزارییەک زیاد بکە.",
+    chalk_label:"مینیو",
+    c1_h:"مانگانە", c1_1:"٢ بڕین لە مانگێکدا", c1_2:"٤ بڕین لە مانگێکدا", c1_3:"بڕین + ڕیش، ٤ جار",
+    c2_h:"زیادکراوەکان", c2_1:"پارچەی گەرمی زیادە", c2_2:"ماسازی پێستی سەر", c2_3:"چارەسەری ڕۆنی ڕیش",
+    c3_h:"یەکەم سەردان", c3_1:"ڕاوێژ + بڕینی کلاسیک", c3_2:"داشکاندنی ناساندن", c3_3:"نرخی خوێندکار (تەنها بڕین)",
+    ch_title:"سێ کورسییەکە", ch_sub:"لەگەڵ دەلاکێکی دیاریکراو حجز بکە، یان یەکەم کورسیی ئازاد وەربگرە.",
+    ch1_num:"کورسی ٠١", ch1_role:"خاوەن — فەید و تیغی نەریتی", ch1_bio:"چواردە ساڵە لە پشت کورسیدایە. ئەگەر فەیدێکت دەوێت کە دوای سێ هەفتە هێشتا جوان بێت، ئەمە شوێنەکەیە.",
+    ch2_num:"کورسی ٠٢", ch2_role:"پسپۆڕی ڕیش", ch2_bio:"لە پۆرتۆگال ڕاهێنراوە لەسەر دەلاکی کلاسیک. شێوەدانی ڕیش و تاشین بە پارچەی گەرم تەواوی تیشکیەتی.",
+    ch3_num:"کورسی ٠٣", ch3_role:"بڕینی نوێ و شێواز", ch3_bio:"هەموو شتێک کار دەکات کە پەیوەندی بە مەقەست و شێوازەوە هەیە — چڵکاو، کورت، و درێژییەکانی کە پێویستیان بە شێوەیە.",
+    book_title:"کورسیت حجز بکە", book_sub:"فۆرمەکە پڕ بکەرەوە، لە ماوەی کاتژمێرێکدا بە نامە دووپاتی دەکەینەوە.",
+    info_addr:"ناونیشان", info_addr_v:"شەقامی فاوندری ٢١٤، ڕیڤەرساید", info_phone:"ژمارەی مۆبایل",
+    info_wait:"مامناوەندی چاوەڕوانی سەردانی ڕاستەوخۆ", info_wait_v:"~١٥ خولەک", info_next:"نزیکترین کاتی ئازاد", info_next_v:"ئەمڕۆ، ٤:٣٠ی پاش نیوەڕۆ",
+    f_name:"ناوی تەواو", f_name_ph:"ناوت", f_phone:"ژمارەی مۆبایل", f_service:"خزمەتگوزاری",
+    sv1:"— 10,000 د.ع", sv2:"و — 10,000 د.ع", sv3:"— 10,000 د.ع",
+    sv4:"تاشین بە پارچەی گەرم —  15,000.ع", sv5:"بڕین و تاشین پێکەوە — 10,000 د.ع",
+    f_date:"بەروار", f_time:"کات", f_barber:"دەلاکی دڵخواز", bv0:"بەبێ پێویست — یەکەم کورسیی ئازاد",
+    f_submit:"دووپاتکردنەوەی کات", f_note:"ئەمە فۆرمێکی نموونەیە — هیچ حجزێکی ڕاستەقینە نانێردرێت.",
+    q_title:"لە کورسیەکەوە",
+    q1:"\u201Cیەکەم فەید کە ڕاستەقینە ماوەی سێ هەفتەی تەواو خۆی ڕاگرت بەبێ لەدەستدانی شێوە.\u201D", q1_who:" coustumer ",
+    q2:"\u201Cتاشین بە پارچەی گەرم بەتەنها شایانی سەردانەکەیە. ماركوس هەرگیز خێرا ناکات.\u201D", q2_who:"coustumer",
+    q3:"\u201Cئینێس شێوەی ڕیشم لە یەکەم هەوڵدا ڕاستی کرد. لەو کاتەوە هەر مانگ دەگەڕێمەوە.\u201D", q3_who:"coustumer",
+    h_mf:"دووشەممە – هەینی", h_mf_v:"٩:٠٠ی بەیانی – ٧:٠٠ی ئێوارە", h_sat:"شەممە", h_sat_v:"٩:٠٠ی بەیانی – ٥:٠٠ی ئێوارە", h_sun:"یەکشەممە", h_sun_v:"داخراوە",
+    foot_addr:"duhok- 07500000000 ", foot_note:"دوکانی دەلاکی کورد · نموونەی جێگیر، بەبێ پەیوەندیدانی ڕاستەقینە",
+    thanks_prefix:"سوپاس، ", thanks_suffix:" — ئەم فۆرمە نموونەیە و هێشتا حجزی ڕاستەقینە نانێرێت، بەڵام ئامادەیە بۆ پەیوەستکردن.", thanks_fallback:"بەڕێز"
+  }
+};
+
+function applyLang(lang){
+  document.documentElement.lang = lang;
+  document.documentElement.dir = (lang === 'en') ? 'ltr' : 'rtl';
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const key = el.getAttribute('data-i18n');
+    if(dict[lang][key] !== undefined){ el.innerHTML = dict[lang][key]; }
+  });
+  const chalk = document.querySelector('.chalk');
+  if(chalk){ chalk.setAttribute('data-label', dict[lang].chalk_label); }
+  const namePh = document.getElementById('fname');
+  if(namePh && dict[lang].f_name_ph){ namePh.setAttribute('placeholder', dict[lang].f_name_ph); }
+  document.querySelectorAll('#langSeg button').forEach(b=> b.classList.toggle('active', b.dataset.lang === lang));
+}
+document.getElementById('langSeg').addEventListener('click', e=>{
+  const btn = e.target.closest('button'); if(!btn) return; applyLang(btn.dataset.lang);
+});
+
+function currentLang(){ const a = document.querySelector('#langSeg button.active'); return a ? a.dataset.lang : 'en'; }
+
+function handleBooking(e){
+  e.preventDefault();
+  const note = document.getElementById('bookNote');
+  const lang = currentLang();
+  const name = document.getElementById('fname').value || dict[lang].thanks_fallback;
+  note.textContent = dict[lang].thanks_prefix + name + dict[lang].thanks_suffix;
+  note.style.color = 'var(--brass-bright)';
+  return false;
+}
+</script>
+</body>
+</html>
